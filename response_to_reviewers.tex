@@ -1,0 +1,212 @@
+\documentclass{article}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\large#1\par
+  }
+}
+
+\title{Learning to Associate: Multimodal Inference with Fully Missing Modality Data - Response Letter}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent Thank you for providing detailed and insightful comments on our manuscript entitled ``Learning to Associate: Multimodal Inference with Fully Missing Modality Data” We appreciate the time and effort you devoted to reviewing our work and offering constructive feedback. We have carefully considered each suggestion, and we believe that our revisions have substantially improved the paper's clarity and overall quality. In the following sections, we address all the points raised by the reviewers systematically and comprehensively.
+
+\section*{Summary of Major Revision}
+\noindent \textbf{The abstract was refined} to streamline the framing, highlight the problem--solution--impact structure, and explicitly list the core contributions.
+\textbf{The Introduction was reorganised} to emphasise real-world challenges, present Cross-Modal Association Models earlier, and improve clarity regarding the different information types, while stressing the novelty of a post-training approach and targeted architecture.
+\textbf{The related works section was condensed} by rephrasing key points for conciseness and adding a conclusion on inference-time missing modality solutions.
+\textbf{The Cross-Modal Association Models section was streamlined} with a new simplified figure, clearer mathematical formulations for improved intelligibility, and a clearer algorithmic overview.
+\textbf{The experimental setup was refined} by making dataset descriptions more concise and improving alignment with subsequent sections after the revision.
+\textbf{The results section remained unchanged}.
+\textbf{The Discussion was expanded and reorganised} to improve the core analysis, incorporate comprehensive ablation studies, address limitations, and propose future directions.
+\textbf{The conclusion was restructured} to emphasise contributions, limitations, and broader implications, including practical applications.
+
+\section*{Reviewer 1}
+We want to thank you for your thorough reading of our manuscript and for offering insightful comments. Your feedback has helped us strengthen our work, especially regarding clarifying our assumptions, technical justifications, and broader applicability. Below, we address each of your comments in detail.
+
+\vspace{0.25cm}
+\hline 
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{Limited Applicability: The second assumption posits that ``sufficient information within the available modalities can infer
+the missing ones", yet this presupposes a level of redundancy or complementarity that may not exist in all real-world scenarios. Specifically, in autonomous driving applications, the visual modality often lacks the precision and range offered by lidar, which is critical for tasks such as obstacle detection and depth perception. This limitation challenges the model's capacity to compensate for the absence of lidar data accurately. To enhance the generalisability of the proposed method, it would be beneficial to explore scenarios where modalities exhibit contrastive rather than complementary relationships and consider how the model might be adapted to handle such cases more effectively.}
+\\
+
+\noindent\textbf{[Comment Summary]} You point out that our method assumes ``sufficient information within the available modalities can infer the missing ones," which may not hold in scenarios where modalities are not complementary or redundant (e.g.\ lidar vs.\ camera). You recommend exploring scenarios with more contrastive relationships and discussing how the model might handle them.
+\\
+
+\noindent\textbf{[Response]} Our approach leverages mutual and complementary information between modalities for a given task. We recognise that reconstruction becomes more challenging if two modalities (e.g.\ camera and lidar) are fundamentally distinct or contain significant contrastive information. We have updated Section 6 (``Limitations and Future Directions") to reflect that C-MAMs may only partially improve these high-contrast scenarios. We have introduced two new ablation studies (referenced in the ``Limitations \& Future Work" section) examining the statistical relationships between different modality embeddings and between the ground-truth and reconstructed embeddings. These analyses illustrate when contrastive vs.\ complementary features can limit or enhance the reconstruction. For three datasets, we computed measures such as mutual information (MI), conditional entropy (H), pointwise mutual information (PMI),
+cosine similarity, and KL divergence to assess the alignment or level of contrastiveness between learnt modality embeddings and analyse the impact on reconstruction.
+
+The camera-lidar example is indeed interesting; while not addressed in our current experiments, we consider it an important avenue for future research. Specifically, we plan to investigate domains where one modality offers information that is largely orthogonal to or only weakly correlated with another, expanding C-MAMs to handle more extreme contrastive cases.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{In Eq.\ (9), regarding the association network, as illustrated in Fig.\ 3, there are two linear layers with batch normalisation (BN) and ReLU activation instead of a simple linear transformation. The authors need to provide further clarification on this.} 
+\\
+
+\noindent\textbf{[Comment Summary]} You highlight that the original text and figure mention only a ``linear transform," while the actual implementation involves a small MLP block (linear $\to$ BN $\to$ ReLU) repeated or stacked. You requested clarification.
+\\
+
+\noindent\textbf{[Response]} In the revised manuscript, we have re-written parts of Section 3 to improve readability and intelligibility. As part of this, the description of the association network has been updated to reflect the actual implementation, which in this work involves two linear layers with batch normalisation and ReLU activation. These additional components are used to improve the models' training process. We hope these modifications provide the necessary clarity on the architecture of the association network. 
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{In Eq.\ (10), does the trained modality-specific encoder require fine-tuning? In my view, only the parameters of the
+association network need to be adjusted.}
+\\
+
+\noindent\textbf{[Comment Summary]} You asked whether we are fine-tuning the originally trained modality-specific encoders or only the association network's parameters when training the C-MAM. You expressed the view that only the latter might need adjusting.
+\\
+
+\noindent\textbf{[Response]} In Section 4.4 of the revised manuscript, we clarify that the trained modality-specific encoders \textbf{do not} necessarily require fine-tuning and that only the association network is the primary component requiring training. To investigate this we conducted an ablation study using the MOSEI dataset. In the study we trained three sets of models: (1) Training just the association network part of the C-MAMs, keeping the modality-specific encoders frozen. (2) Training the association network and the modality-specific encoders initialised using random weights. (3) Training the association network and the modality-specific encoder initialised with the weights of the trained modality-specific encoders. The results show that training only the association network is often sufficient, however there are several situations where training the modality-specific encoders with the weights of the trained modality-specific encoders improved performance. However, these improvements come at the cost of increased training time, inference time and space on disk. We present this as a decision left to whoever is implementing the C-MAMs, as the decision to train just the association model or the encoders depends on the context in which the C-MAM will be used. The ablation can be found in the appendix. 
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{The linear layer approach to modality reconstruction is simplistic and neglects the diverse impacts of existing modalities, potentially introducing harmful contrastive information.}
+\\
+
+\noindent\textbf{[Comment Summary]} You note that a purely linear (or small-MLP) approach to reconstruct a missing modality might be overly simplistic in scenarios where strong cross-modal contrast or highly nonlinear relationships exist.
+\\
+
+\noindent\textbf{[Response]} We deliberately adopt a minimal architecture to preserve simplicity and demonstrate the feasibility of post-hoc reconstruction for restoring significant performance. As mentioned in the ``Limitations \& Future Works" section, deeper or more sophisticated modules might yield better reconstruction in highly contrastive or complex scenarios. Our simple C-MAMs still achieved strong performance across diverse datasets and modalities with the current architecture and training strategy. Simplicity ensures minimal overhead and smooth integration into existing systems. Future extensions could indeed explore whether deeper or multi-branch MLPs, contrastive losses, or adversarial objectives further improve performance.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{There are some writing errors.}
+\\
+
+\noindent\textbf{[Comment Summary]} You pointed out minor issues such as an incorrect line reference in Algorithm~1 and the capitalisation error (``illustrates" vs.\ ``Illustrates"), among others.
+\\
+
+\noindent\textbf{[Response]} We have thoroughly reviewed the manuscript and corrected these errors (and others). We appreciate your attention to detail and thank you for bringing them to our attention.
+
+\vspace{0.25cm}
+\hline
+
+\section*{Reviewer 2}
+Thank you for your thoughtful and constructive feedback. Below, we detail each of your comments, outlining the revisions and clarifications made to improve the manuscript.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{In summary, this paper aims to address the issue of missing modalities during model inference, a problem that is both highly
+practical and challenging. The proposed solution is relatively simple but primarily based on MAE, and its innovation requires further clarification. Moreover, the paper makes strong assumptions, which may limit the method's applicability in real-world scenarios. Please refer to the 'three weakest points' section for additional details. Therefore, I believe significant revisions are needed for this paper to meet the journal publication standards.}
+\\
+
+\noindent\textbf{[Comment Summary]} You note that our approach uses a relatively simple Mean Absolute Error (MAE) loss \textbf{\textit{(1)}} and question the underlying innovation of our proposed method \textbf{\textit{(2)}}, given MAE's wide usage and our strong assumptions about missing modality data \textbf{\textit{(3)}}.
+\\
+
+\noindent\textbf{[Response]} A quick clarification/correction: in the original submission, claiming that MAE was used to train the C-MAMs was an oversight. We used Mean Squared Error (MSE). This has been corrected in the revised manuscript. Nevertheless, we understand your broader point remains:
+
+\begin{enumerate}
+    \item We have revised the Abstract, Introduction, Related Works, Discussion, and Conclusion sections to emphasise that our contribution is not simply the use of MSE, but rather theIntroductionn of a \emph{post-hoc, inference-stage} reconstruction framework (C-MAMs) that does not require modifying or retraining the base multimodal model. This decoupling from the core training process is a key advancement over existing methods, which typically incorporate missing-modality handling into a single, more complex training regime. C-MAMs achieve strong performance with a simple architecture and training strategy, showing the effectiveness of a targeted, modular approach.
+    \item We consciously adopt MSE due to its simplicity and effectiveness in aligning the generated embeddings with those learned by the base model. While more sophisticated losses (e.g.\ adversarial or contrastive) could be explored, MSE demonstrates that even a basic reconstruction target can yield significant performance recovery when a modality is fully missing. The revised discussion highlights potential avenues for alternative loss functions in future work. In our new statistical analysis ablation, we also provide results for training on the MM-IMDb dataset using both cosine similarity and MSE, offering insight into how different loss functions affect reconstruction quality.
+    \item We acknowledge that real-world tasks sometimes exhibit weaker correlations between modalities. Our revised Limitations section discusses how tasks with more distinct or contrastive modalities affect reconstruction. We demonstrate this via statistical analyses on three datasets, examining the relationships between the ground-truth and reconstructed embeddings. While C-MAMs do not fully recover performance in all settings, our post-hoc design is flexible. It may incorporate expansions (e.g.\ multi-objective or adversarial training) to handle more complex data distributions.
+\end{enumerate}
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{It is not clear why the proposed method can handle different information interactions, such as mutual, complementary,
+contrastive, and imbalanced information. Additional experiments or theoretical explanations are necessary.}
+\\
+
+\noindent\textbf{[Comment Summary]} You indicate that the paper does not clearly show how C-MAMs cope with various modality relationships (mutual, complementary, contrastive, and imbalanced), and you request additional experiments or theory.
+\\
+
+\noindent\textbf{[Response]} We have revised the Discussion section, adding new ablation studies and results related to contrastive, mutual, and complementary information. We examine the statistical relationships between ground-truth and reconstructed embeddings and among the learnt embedding spaces of the modality-specific encoders. These analyses illuminate how C-MAMs reconstruct embeddings and show their capacity to leverage the mutual and complementary information across modalities. We also investigate how contrastive information affects C-MAMs based on the observed performance metrics and relationships between learnt embedding spaces. Specifically, in more mutually informative scenarios, C-MAMs reconstruct missing features with higher performance; conversely, when data is more contrastive (e.g.\ Kinetics-Sounds), reconstruction improvements are present but reduced. This aligns with the principle that the C-MAM can only partially compensate if the base multimodal model did not learn robust cross-modal correlations.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{The notation in Section 3.3 of the paper needs improvement, as it requires readers to spend more time understanding what
+are essentially simple operations.}
+\\
+
+\noindent\textbf{[Comment Summary]} You observe that the notation describing basic operations (e.g.\ linear transformations, fusion steps) is overly dense, making Section~3.3 unnecessarily difficult to parse.
+\\
+
+\noindent\textbf{[Response]} We have reorganised and condensed the mathematical notation in Section~3 to focus on the core steps: (1) extracting modality embeddings via encoder networks, and (2) passing them through our association network for reconstruction. Several equation blocks have been simplified or moved inline. We replaced the original figure with a more straightforward diagram illustrating how C-MAMs integrate with a multimodal model: each step (encoder output, association network transformation, and classification) now has clear labels and minimal notational clutter. We have also updated the corresponding algorithm to reflect these changes. The figure and algorithm are now integrated more cohesively into the text, improving readability and comprehension. We hope these changes will make the method more accessible and reduce readers' time to understand its operations.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+
+\noindent We trust these revisions meet your expectations by clarifying our technical design, simplifying the presentation, and better demonstrating how C-MAMs manage various inter-modality relationships. Your feedback has significantly improved the paper's clarity, and we sincerely appreciate your thorough review. Please let us know if you have any further questions or would like more details; we would be happy to provide additional clarifications. Thank you again for your valuable insights.
+
+\section*{Reviewer 3}
+We appreciate your thoughtful critique of our manuscript. Below are our point-by-point responses, which outline how we have revised and strengthened the paper to address your comments.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{Even though the major contribution claimed in the paper is that the proposed method only utilises an already trained full
+modality model, the proposed method requires the original training data of the model, which is a significant limitation in
+practice.}
+\\
+
+\noindent\textbf{[Comment Summary]} You note that our approach, while post-hoc relative to the trained multimodal model, still requires access to the original training dataset to learn the Cross-Modal Association Model (C-MAM). You find this a notable practical limitation.
+\\
+
+\noindent\textbf{[Response]} We agree that needing the original training dataset can pose significant challenges, such as privacy concerns, proprietary restrictions, or limited archival. To investigate how much data is required to train C-MAMs. The results show that C-MAMs can still be trained effectively on a fraction of the original dataset (e.g.\ 10\% or 20\% of the samples) while recovering much of the missing-modality performance. This finding highlights that the reliance on large-scale training data can be mitigated, though at the cost of less stable training. It also underscores the benefit of targeting the static learnt modality embeddings post-hoc. Our overarching goal is to demonstrate the viability of post-hoc feature reconstruction rather than claim universal coverage of all possible scenarios. In future work, we aim to explore more training strategies to make C-MAMs applicable in data- and computationally-restricted environments.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{The proposed method builds upon the mechanism of imagination between modalities, which is a common technique in
+recent research. The technical novelty is somehow limited.}
+\\
+
+\noindent\textbf{[Comment Summary]} You remark that our method draws inspiration from cross-modal ``imagination," a standard paradigm in recent research (e.g.\ generating one modality from another). Consequently, you question whether the technical novelty is limited.
+\\
+
+\noindent\textbf{[Response]} We appreciate the historical context of cross-modal ``imagination.” However, most such approaches incorporate the generation task \emph{during} multimodal model training. By contrast, our method is \emph{fully decoupled} from the main training pipeline, introducing the reconstruction network only after the base model is finalised. We clarified this positioning in our Introduction and revised Related Works section. Separating reconstruction from the original training objective avoids updating the base model's parameters or requiring a multi-objective loss. This modular design preserves the baseline's performance and makes C-MAMs simpler to deploy in distributed or commercial environments, an important practical advantage. While we do not deny conceptual overlap with prior ``imagination" models, we emphasise that C-MAMs provide a complementary, post-hoc approach. Future work may integrate advanced generative losses or cycle-consistency constraints into our pipeline, but our core innovation lies in the fully decoupled reconstruction stage.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent\textbf{[Comment]} \textit{From a theoretical viewpoint, the proposed method cannot handle all cases of modality missing, especially when the already
+trained full modality model doesn't sufficiently capture the feature space supporting cross-modality imagination. The current
+paper lacks an in-depth analysis on when the proposed method will work and when it will not.}
+\\
+
+\noindent\textbf{[Comment Summary]} You argue that if the base model fails to learn a robust embedding for one modality (e.g.\ overshadowed or never captured in training), then post-hoc reconstruction may be severely limited. Additionally, the paper lacks deeper analysis of when and why the method might fail.
+\\
+
+\noindent\textbf{[Response]} In the revised Discussion (Section 6) and the Limitations subsection, we clarify that C-MAMs rely on the baseline model having adequately learnt cross-modal correlations. If, for instance, a sensor was rarely used or overshadowed by a more dominant modality, the base model will not embed its features effectively, making reconstruction gains only partial or negligible. We added further ablation studies in the Discussion section and Appendix, examining statistical relationships between the ground-truth vs.\ reconstructed embeddings. We observe meaningful but less pronounced gains in more contrastive tasks, corresponding precisely to cases where the base model's cross-modal alignment was weak. While our method substantially improves in many realistic scenarios, we agree that fully rigorous coverage would require systematically investigating boundary conditions (e.g.\ severely disjoint modalities). In an additional statistical analysis ablation, we observed that some modalities capture fewer relevant features, indicated by performance metrics and significant statistical deviations. This provides a strong basis for further inquiries into (1) what these missing features represent for the target task, and (2) how they might be captured via other modalities. \newline
+
+\noindent We hope these revisions sufficiently address your concerns regarding (1) the requirement of the original dataset, (2) the nature of our ``imagination" approach and its novelty, and (3) the importance of a well-trained baseline model for successful reconstruction. We are grateful for your feedback, which has led us to strengthen our manuscript with more explicit discussions on limitations and potential next steps. Thank you again for your time and insights. Please let us know if there is anything further you wish to see clarified or modified.
+
+\vspace{0.25cm}
+\hline
+\vspace{0.25cm}
+
+\noindent We trust that our responses and the accompanying revision in the manuscript demonstrate our commitment to addressing each reviewer’s comments thoroughly. We appreciate the opportunity to strengthen our work and welcome any further suggestions or feedback to ensure that our manuscript meets the journal's high standards. We thank you again for your time and consideration, and we look forward to your decision regarding the revised manuscript. \newline
+
+
+\noindent Kind regards,
+
+Jack Geraghty, Andrew Hines and Fatemeh Golpayegani 
+
+\end{document}

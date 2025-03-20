@@ -1,0 +1,180 @@
+The following sections provide supplementary material for the main paper. \Cref{sec:reproducibility,sec:hyperparameters} discusses the reproducibility of the experiments conducted in the main paper and provides the hyperparameters used. \Cref{sec:reproducibility_exp3} includes further information on the models and C-MAMs trained in experiment three. \Cref{sec:contrib} presents and discusses experimental results investigating the contribution of each modality to C-MAM performance for the models tested in experiment 3. \Cref{sec:MOSEI} then provides the results of evaluating C-MAMs on the MOSEI dataset using the Utterance Fusion baseline model. Alongside the performance metrics, we also present the reconstruction errors, T-SNE Visualisations and the complete statistical analysis of the C-MAMs' reconstruction quality across the missing conditions. \Cref{sec:additional_results} provides additional performance results of the models evaluated in the experiments. Finally, \Cref{sec:hyperparameters} provides the hyperparameters used for the models trained on the AudioSet, AV-MNIST, Kinetics-Sounds, and MMIMDB datasets.
+
+\subsection{Reproducibility}\label{sec:reproducibility}
+The code used for implementing and evaluating C-MAMs will be made publicly available on GitHub upon publication, with a link in this paper's final version. 
+Experiments were conducted on a desktop system with an Intel i7-13700K processor, 32GB RAM, and an Nvidia RTX 3070 GPU.
+To ensure reproducibility, the main text and appendix describe all relevant experimental details, including dataset preprocessing, hyperparameter choices, and evaluation procedures. The provided code will include all necessary components to replicate the reported results.
+
+\subsection{Experiment 3: C-MAMs}
+\label{sec:reproducibility_exp3}
+We used the official repositories and the hyperparameters provided for all baseline models trained in experiment three. For both models, we recreated the results to within approximately 2\%, which can be attributed to the random seeds used. 
+
+The C-MAMs used for experiment three comprise the modality-specific encoders from the baseline models. The association networks were composed of three linear layers with batch normalisation, dropout and ReLU activations for the EMT-DLFR model, and for MMIN, three variations were used; two linear layers with batch normalisation, dropout and ReLU activations, ReLU and dropout for the output of the encoder, followed by two linear layers with batch normalisation, dropout and ReLU activations and finally the bimodal variation which includes two linear layers (the input layer is wider) with batch normalisation, dropout and ReLU activations. The C-MAMs were trained using Adam optimisation, a $1e^{-3}$ learning rate, batch size of $128$ and MSE loss. They were trained over 100 epochs during which the best-performing models were saved for evaluation.
+
+\input{sections/ablations/min_training}
+
+\subsection{Bi-modal C-MAM Contributions}\label{sec:contrib}
+Table~\ref{tab:contributions} evaluates C-MAMs in bimodal settings where a single modality is missing. The results confirm that the generated features consistently improved performance, though the extent of improvement depended on the base model's reliance on the missing modality. If a model inherently underutilises a particular modality, the C-MAM's ability to recover performance is limited by the degree to which the missing modality initially contributed to inference. The results also demonstrate that the C-MAMs, like any other multimodal model, are susceptible to using modality data in an imbalanced manner. For example, in MOSEI, removing the text modality caused a substantial drop in accuracy, indicating its dominant role in the model's decision-making. In contrast, missing audio or video led to minimal performance degradation, suggesting that the model already relied predominantly on textual information. This highlights a fundamental limitation: if a modality is not critical to the base model's predictions, its reconstruction via C-MAMs will not substantially improve performance.
+
+\input{sections/ablations/contrastive_info}
+
+\begin{table}[!phtb]
+    \footnotesize
+    \centering
+    \caption{Bi-modal C-MAM performance metrics with missing modality data.}
+    \label{tab:contributions}
+    \begin{tabular}{l|c|l|cc|cc}
+    \hline
+    \textbf{Model} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Input\\ Modalities\end{tabular}} &
+      \multicolumn{1}{c|}{\textbf{Condition}} &
+      \multicolumn{2}{c|}{\textbf{MOSI}} &
+      \multicolumn{2}{c}{\textbf{MOSEI}} \\ \hline
+    \textbf{}                & \textbf{}         &                        & \textbf{Has0 Acc}   & \textbf{Has0 F1}   & \textbf{Has0 Acc} & \textbf{Has0 F1} \\ \hline
+    \textbf{EMT-DLFR}        & \textbf{AV} & \textbf{No Missing}    & 0.6070              & 0.4746             & 0.6120            & 0.6459           \\
+    \textbf{}                & \textbf{}         & \textbf{Missing Audio} & 0.5983              & 0.4479             & 0.6283            & 0.4983           \\
+    \textbf{}                & \textbf{}         & \textbf{Missing Video} & 0.6070              & 0.4745             & 0.6219            & 0.5066           \\ \hline
+    \textbf{Robust EMT-DLFR} & \textbf{AV} & \textbf{No Missing}    & 0.6579              & 0.5672             & 0.6713            & 0.6633           \\
+    \textbf{}                & \textbf{}         & \textbf{Missing Audio} & 0.6623              & 0.5629             & 0.6787            & 0.5803           \\
+    \textbf{}                & \textbf{}         & \textbf{Missing Video} & 0.6565              & 0.5583             & 0.6731            & 0.5772           \\ \hline
+    \textbf{}                & \textbf{}         &                        & \multicolumn{2}{c|}{\textbf{MSP-IMPROV}} & \multicolumn{2}{c}{\textbf{IEMOCAP}} \\ \cline{4-7} 
+    \textbf{}                & \textbf{}         &                        & \multicolumn{2}{c|}{\textbf{F1}}         & \textbf{UA}       & \textbf{WA}      \\ \hline
+    \textbf{Baseline MMIN}   & \textbf{AV} & \textbf{No Missing}    & \multicolumn{2}{c|}{0.5926}              & 0.7304            & 0.7343           \\
+    \textbf{}                & \textbf{}         & \textbf{Missing Audio} & \multicolumn{2}{c|}{0.3073}              & 0.4185            & 0.3819           \\
+                             & \textbf{}         & \textbf{Missing Video} & \multicolumn{2}{c|}{0.3319}              & 0.3764            & 0.4035           \\ \cline{2-7} 
+                             & \textbf{AT} & \textbf{No Missing}    & \multicolumn{2}{c|}{0.6465}              & 0.7587            & 0.7765           \\
+                             & \textbf{}         & \textbf{Missing Audio} & \multicolumn{2}{c|}{0.4990}              & 0.5456            & 0.5527           \\
+                             & \textbf{}         & \textbf{Missing Text}  & \multicolumn{2}{c|}{0.3906}              & 0.4709            & 0.5176           \\ \cline{2-7} 
+                             & \textbf{VT} & \textbf{No Missing}    & \multicolumn{2}{c|}{0.6624}              & 0.7492            & 0.7607           \\
+                             & \textbf{}         & \textbf{Missing Video} & \multicolumn{2}{c|}{0.6448}              & 0.6531            & 0.6633           \\
+                             &                   & \textbf{Missing Text}  & \multicolumn{2}{c|}{0.4159}              & 0.4710            & 0.4859           \\ \hline
+    \end{tabular}%
+\end{table}
+
+\subsection{MOSEI}\label{sec:mosei}
+\label{sec:MOSEI}
+The following sections provide additional results (performance metrics, statistical analysis, and T-SNE visualisations) for the MOSEI dataset using the Utterance Fusion model from \cite{zhao-etal-2021-missing}. These results are an extension of those presented in \Cref{sec:disc}.
+
+\begin{table}[h!]
+\centering
+\caption{Performance metrics for each missing modality condition, with and without a C-MAM, on the MOSEI dataset using the Utterance-Fusion model from \cite{zhao-etal-2021-missing}. \textbf{\textit{**Note: The results in this table are rounded to two decimal places, which eads to some reconstructed metrics being equal to the baseline metrics. The reconstruction errors are very low and performance is very close to the baselines, see \Cref{tab:mosei_error_results} for the reconstruction errors.}}}
+\label{tab:mosei_results}
+\begin{tabular}{ll|ccccccc}
+\hline
+\multicolumn{1}{c}{\textbf{Metric}} & \multicolumn{1}{c|}{\textbf{Model}} & \textbf{A} & \textbf{V} & \textbf{T} & \textbf{AV} & \textbf{AT} & \textbf{VT} & \textbf{AVT} \\ \hline
+\textbf{Has0 Accuracy}    & \textbf{Baseline}          & 0.22          & 0.45          & 0.71          & 0.38          & 0.73          & 0.75          & 0.77 \\
+\textbf{}                 & \textbf{Baseline w/ C-MAM} & \textbf{0.62} & \textbf{0.68} & \textbf{0.77} & \textbf{0.74} & \textbf{0.77} & \textbf{0.76} & -    \\ \hline
+\textbf{Has0 F1 Weighted} & \textbf{Baseline}          & 0.08          & 0.39          & 0.72          & 0.37          & 0.74          & 0.74          & 0.75 \\
+\textbf{}                 & \textbf{Baseline w/ C-MAM} & \textbf{0.64} & \textbf{0.65} & \textbf{0.75} & \textbf{0.70} & \textbf{0.76} & \textbf{0.75} & -    \\ \hline
+\textbf{Non0 Accuracy}    & \textbf{Baseline}          & 0.37          & 0.49          & 0.76          & 0.50          & 0.77          & 0.81          & 0.81 \\
+\textbf{}                 & \textbf{Baseline w/ C-MAM} & \textbf{0.58} & \textbf{0.60} & \textbf{0.82} & \textbf{0.63} & \textbf{0.82} & 0.81          & -    \\ \hline
+\textbf{Non0 F1 Weighted} & \textbf{Baseline}          & 0.20          & 0.39          & 0.76          & 0.45          & 0.77          & 0.81          & 0.82 \\
+\textbf{}                 & \textbf{Baseline w/ C-MAM} & \textbf{0.58} & \textbf{0.57} & \textbf{0.82} & \textbf{0.62} & \textbf{0.82} & 0.81          & -    \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[hb!]
+    \centering
+    \begin{tabular}{ccc} 
+      % First row
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/audio_to_video/plots/tsne_embeddings_with_reconstructions.png} & 
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/audio_to_text/plots/tsne_embeddings_with_reconstructions.png} & 
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/video_to_audio/plots/tsne_embeddings_with_reconstructions.png}  \\
+      
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/video_to_text/plots/tsne_embeddings_with_reconstructions.png} & 
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/text_to_audio/plots/tsne_embeddings_with_reconstructions.png} & 
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/text_to_video/plots/tsne_embeddings_with_reconstructions.png}  \\ 
+      
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/audio_video_to_text/plots/tsne_embeddings_with_reconstructions.png} & 
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/audio_text_to_video/plots/tsne_embeddings_with_reconstructions.png}  & 
+      \includegraphics[width=0.33\textwidth]{imgs/MOSEI/text_video_to_audio/plots/tsne_embeddings_with_reconstructions.png} \\ 
+      
+    \end{tabular}
+    \caption{T-SNE visualisation of the C-MAM reconstructed embeddings versus the ground truth embeddings produced by the trained modality-specific encoders for the MOSEI dataset.}
+  \end{figure}
+
+
+  \begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/audio_to_video/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/audio_to_text/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/video_to_audio/statstical_analysis.pdf}
+    \end{figure}
+  \begin{figure}[ht!]
+    \ContinuedFloat
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/video_to_text/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/text_to_audio/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/text_to_video/statstical_analysis.pdf}
+  \end{figure}
+    \begin{figure}[ht!]
+    \ContinuedFloat
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/audio_video_to_text/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/audio_text_to_video/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/text_video_to_audio/statstical_analysis.pdf}
+    \caption{Statistical analysis of C-MAMs' reconstruction quality across the missing conditions for the MOSEI dataset. Each includes a cosine similarity distribution, dimension-wise effect size analysis, and a volcano plot for mean difference significance.}
+\end{figure}
+
+\begin{table}[hb!]
+  \centering
+  \caption{Reconstruction error metrics for the C-MAMs trained on the MOSEI dataset and Utterance Fusion model from \cite{zhao-etal-2021-missing}.}
+  \label{tab:mosei_error_results}
+  \begin{tabular}{c|cccccc}
+  \hline
+  \multirow{2}{*}{\textbf{Metric}} & \multicolumn{6}{c}{\textbf{MOSEI}}                                                                                                           \\ \cline{2-7} 
+                                   & \textbf{A} & \textbf{V} & \textbf{T} & \textbf{AV} & \textbf{AT} & \multicolumn{1}{l}{\textbf{VT}} \\ \hline
+  \textbf{MAE}                     & 0.2146           & 0.2165           & 0.1532           & 0.2135              & 0.1513              & 0.0370                                  \\
+  \textbf{MSE}                     & 0.2338           & 0.2326           & 0.0415           & 0.2296              & 0.0403              & 0.0049                                  \\ \hline
+  \end{tabular}%
+\end{table}
+
+\FloatBarrier
+
+\input{sections/ablations/association_only}
+\input{sections/ablations/model_size_and_time}
+
+
+\FloatBarrier
+
+\subsection{Additional Results}\label{sec:additional_results}
+The following section provides additional performance results for the models evaluated in the primary experiments. Each figure shows how a performance metric changes with respect to increasing amounts of missing data. 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/full_results-2.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{imgs/full_results-1.pdf}
+\end{figure}
+
+\FloatBarrier
+\clearpage
+\subsection{Hyperparameters}\label{sec:hyperparameters}
+\begin{table}[h!]
+    \footnotesize
+    \caption{ConvBlock architecture employed in several models.}
+    \label{tab:conv_block}
+    \centering
+    \vspace{0pt} % Align tops
+            \begin{tabular}{|cllll|}
+            \hline
+            \multicolumn{5}{c}{\textbf{ConvBlock - $\{i_1,i_2,o_1,o_2,k_1, k_2,s_1,s_2$\}}} \\ \hline
+            \multicolumn{5}{c}{Conv2d - ($i_1,o_1,k_1,s_1$)}             \\ \hline
+            \multicolumn{5}{c}{BatchNorm2d - ($o_1$)}        \\ \hline
+            \multicolumn{5}{c}{ReLU}               \\ \hline
+            \multicolumn{5}{c}{Conv2d - ($i_2,o_2,k_2,s_2$)}             \\ \hline
+            \multicolumn{5}{c}{BatchNorm2d - ($o_2$)}        \\ \hline
+            \multicolumn{5}{c}{ReLU}               \\ \hline
+            \end{tabular}
+            \caption{Where $i_n, o_n, k_n$ and $s_n$, refer to the number of input channels, the number of output, the kernel size and the stride for the $n^{th}$ convolutional layer respectively. The kernel size and stride parameters default to 3 and 1 respectively.}
+    \end{table}    
+\vspace{-1cm}
+\input{sections/appendices/audioset_model_hyparams}
+
+\input{sections/appendices/avmnist_model_hyparams}
+
+\input{sections/appendices/kinetics-sounds_model_hyparams}
+
+\input{sections/appendices/mmimdb_model_hyparams}
+
+

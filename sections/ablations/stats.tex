@@ -1,0 +1,57 @@
+The AVMNIST dataset was evaluated using statistical tests that complement the performance metrics reported in Table~\ref{tab:avmnist_res}. Cosine similarity between the reconstructed and ground-truth embeddings was calculated, yielding a mean of 0.883, a median of 0.924, and a standard deviation of 0.123 for the Audio-to-Image reconstruction. These high similarity values indicate that the essential relationships in the latent space are well preserved.
+
+For each embedding dimension, we computed the mean difference between the ground-truth and reconstructed values, along with its 95\% confidence interval using a t-distribution, and quantified the effect size via Cohen’s d, calculated with the pooled standard deviation. Additionally, we performed independent t-tests for each dimension and applied a Bonferroni correction to account for multiple comparisons. The resulting p-values indicate that most dimensions do not exhibit statistically significant differences between the reconstructed and original embeddings. Specifically, the dimension-wise effect sizes were effectively negligible (mean $\approx -0.004$, $\sigma = 0.065$ for Audio-to-Image and mean $\approx 0.004$, $\sigma = 0.046$ for Image-to-Audio), confirming that any deviations in the latent space are minimal.
+
+These results provide clear quantitative evidence that the reconstructed latent spaces closely mirror the original ones, thereby validating the C-MAM approach in preserving the intrinsic structure and relationships necessary for robust downstream performance.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.99\textwidth]{imgs/AVMNIST/audio_to_image/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/AVMNIST/image_to_audio/statstical_analysis.pdf}
+    \caption{An example of two figures stacked vertically. The top figure (Figure 1) and the bottom figure (Figure 2) illustrate different aspects of the analysis.}
+    \label{fig:avmnist_stats_figure}
+\end{figure}
+
+Figure~\ref{fig:mmimdb_stats} reveals that when reconstructing the image modality from text, the cosine similarity distribution indicates poor directional alignment between the reconstructed and ground-truth embeddings (mean $\approx$ 0.051). Yet, performance metrics (Table~\ref{tab:mmimdb_res}) demonstrate that Text$\rightarrow$Image reconstruction recovers F1 scores to near-baseline levels. In the complementary Image$\rightarrow$Text case, although the cosine similarity is slightly higher (mean $\approx$ 0.112), the trend is similar: the directional alignment is weak even as the reconstructed embeddings yield substantial performance improvements.
+
+The effect size plot shows that differences between the reconstructed and original embeddings are low (most values fall between $-0.05$ and $0.05$, with an overall range of approximately $-0.15$ to $0.1$), while the volcano plot indicates that these low-magnitude differences are statistically significant across several dimensions. These findings suggest the possibility of redundant features within the latent space. In other words, despite statistically significant differences in individual dimensions, the overall performance remains robust. This implies that the model may be invariant to the precise orientation of the embeddings, as the inability to recover high cosine similarity—even when performance is fully restored—indicates that directional alignment is not critical for downstream tasks.
+
+In light of these observations, we performed a cosine loss ablation study to evaluate whether explicitly optimizing for directional alignment would improve reconstruction quality. As summarized in Table~\ref{tab:mmimdb_sub_ablation}, training with only a cosine loss produced performance metrics nearly identical to those obtained with MSE loss. When combining the cosine and MSE losses, a marginal improvement in F1 scores was observed; however, this combined approach did not significantly enhance the cosine similarity of the reconstructed embeddings. These results reinforce the notion that the model’s performance is largely invariant to the specific angular orientation of the latent representations, suggesting that the essential information for downstream tasks is captured even when directional alignment is suboptimal.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.99\textwidth]{imgs/MMIMDB/image_to_text/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MMIMDB/text_to_image/statstical_analysis.pdf}
+    \caption{An example of two figures stacked vertically. The top figure (Figure 1) and the bottom figure (Figure 2) illustrate different aspects of the analysis.}
+    \label{fig:mmimdb_stats}
+\end{figure}
+
+\begin{table}[hbt!]
+    \centering
+    \caption{Analysis of how varying the cosine loss term influences model performance metrics and embedding reconstruction in the MM-IMDb multimodal dataset.}
+    \label{tab:mmimdb_sub_ablation}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{l|ccccc|ccccc}
+    \hline
+                            & \multicolumn{5}{c|}{\textbf{Image $\mapsto$ Text}}                                                      & \multicolumn{5}{c}{\textbf{Text $\mapsto$ Image}}                                                       \\ \cline{2-11} 
+                            & \textbf{F1-Weighted} & \textbf{F1-Samples} & \textbf{F1-Micro} & \textbf{F1-Macro} & \textbf{Cos. Sim.} & \textbf{F1-Weighted} & \textbf{F1-Samples} & \textbf{F1-Micro} & \textbf{F1-Macro} & \textbf{Cos. Sim.} \\ \hline
+    \textbf{MSE}            & 0.4019               & 0.4489              & 0.4577            & 0.2282            & 0.0974             & 0.5743               & 0.5986              & 0.6015            & 0.4232            & 0.0512             \\
+    \textbf{Cos. Sim.}      & 0.4266               & 0.4302              & 0.4362            & 0.2695            & 0.1704             & 0.5148               & 0.5076              & 0.5128            & 0.3871            & 0.1430             \\
+    \textbf{MSE + Cos. Sim} & 0.43088              & 0.4570              & 0.4658            & 0.2608            & 0.1556             & 0.5715               & 0.5877              & 0.5904            & 0.236             & 0.1253             \\ \hline
+    \end{tabular}%
+    }
+\end{table}
+
+
+In the Audio$\rightarrow$Text condition for MOSEI, the reconstructed embeddings exhibit strong directional alignment, as shown by a right-skewed cosine similarity distribution with a high mean (0.79) and median (0.85). However, the volcano plot reveals that many dimensions display statistically significant differences, even though the effect sizes remain near zero (mean = 0.006). This suggests that while the overall latent space is well aligned, certain dimensions are sensitive to even minor discrepancies. Performance metrics (see Figure~\ref{tab:mosei_results}) show that using C-MAM improves the performance metrics significantly, though full recovery to the original baseline is not achieved. These results imply that the model may rely on some redundant features, so that small reconstruction errors in sensitive dimensions do not severely impact overall performance, yet there is still room for improving the reconstruction quality to achieve closer alignment with the baseline. The same is observed for the Audio$\rightarrow$Text condition. There are significant performance improvements over using missing data, but depsite high alignment between the reconstructed and ground-truth embeddings, the model does not fully recover the baseline performance.
+
+The Audio & Text $\rightarrow$ Video reconstruction displays a moderately right-skewed cosine similarity distribution (mean $\approx 0.78$, median $\approx 0.80$, $\sigma \approx 0.10$), suggesting fairly strong directional alignment between the reconstructed and ground-truth video embeddings. The effect size analysis shows mostly low Cohen’s d values (mean $\approx 0.13$, range $[-0.18,,0.43]$), yet the volcano plot indicates that many dimensions are statistically significant despite these modest differences. This pattern implies that the model is sensitive to small deviations in certain dimensions but remains robust overall, likely due to redundant or non-critical features within the video latent space. The performance metrics in this condition confirm that these discrepancies do not negatively impact downstream effectiveness, further supporting the notion that perfect alignment in every dimension is not strictly necessary for strong reconstruction performance.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/audio_to_text/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/video_to_text/statstical_analysis.pdf}
+    \includegraphics[width=0.99\textwidth]{imgs/MOSEI/audio_text_to_video/statstical_analysis.pdf}
+    \caption{An example of two figures stacked vertically. The top figure (Figure 1) and the bottom figure (Figure 2) illustrate different aspects of the analysis.}
+    \label{fig:mosei_stats}
+\end{figure}

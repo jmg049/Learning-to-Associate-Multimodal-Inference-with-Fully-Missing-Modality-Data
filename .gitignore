@@ -1,0 +1,42 @@
+# LaTeX intermediate and auxiliary files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+
+# Bibliography files
+*.bib.bak
+*.bbl.bak
+
+# PDF and generated outputs
+*.pdf
+*.dvi
+*.ps
+
+# Temporary files
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+*.tmp
+*.synctex
+
+# VSCode LaTeX Workshop files
+.vscode/
+
+# Overleaf and TeXShop
+*.synctex(busy)
+

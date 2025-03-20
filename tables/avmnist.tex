@@ -1,0 +1,27 @@
+\begin{table}[h!]
+\footnotesize
+\centering
+\caption{Performance metrics for the models trained on the AVMINST dataset. w/o indicates that the modality was 100\% missing during inference.}
+\label{tab:avmnist_res}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{l|cccccccccc}
+\hline
+\multicolumn{1}{c|}{\textbf{AVMNIST}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 1\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 2\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 5\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 7\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Micro\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Micro\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Micro\end{tabular}} \\ \hline
+\textbf{MM}                                                           & 0.9999 & 0.9999 & 1.000  & 1.000  & 0.9999 & 0.9999 & 0.9999 & 0.9999 & 0.9999 & 0.9999 \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Audio\end{tabular}}       & 0.9699 & 0.9924 & \textbf{0.9996} & \textbf{0.9999} & 0.9720 & 0.9699 & 0.9699 & 0.9700 & 0.9696 & 0.9699 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/ \\ C-MAM Audio\end{tabular}} & \textbf{0.9970} & 0.9991 & 0.9999 & 0.9999 & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Image\end{tabular}}       & 0.6166 & 0.9364 & 0.9712 & 0.9750 & 0.8800 & 0.6166 & 0.6166 & 0.6166 & 0.6253 & 0.6166 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/\\ C-MAM Image\end{tabular}}  & \textbf{0.9997} & \textbf{1.000}  & \textbf{1.000}  & \textbf{1.000}  & \textbf{0.9997} & \textbf{0.9997} & \textbf{0.9997} & \textbf{0.9997} &\textbf{ 0.9997} & \textbf{0.9997} \\ \hline
+\end{tabular}%
+}
+\end{table}

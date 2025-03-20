@@ -1,0 +1,25 @@
+\begin{table}[h!]
+\footnotesize
+\centering
+\caption{Performance metrics for the models trained on the AudioSet dataset. w/o indicates that the modality was 100\% missing during inference.}
+\label{tab:sns_results}
+% \resizebox{\columnwidth}{!}{%
+\begin{tabular}{l|ccccclcc}
+\hline
+\multicolumn{1}{c|}{\textbf{AudioSet}} &
+  \textbf{Accuracy} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Balanced\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Precision -\\ Micro\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Weighted\end{tabular}} &
+  \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Recall -\\ Micro\end{tabular}}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}F1 - \\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Micro\end{tabular}} \\ \hline
+\textbf{MM}                                                           & 0.7451 & 0.7805 & 0.8177 & 0.7451 & 0.7451 & 0.7451 & 0.7448 & 0.7451 \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Audio\end{tabular}}       & 0.4239 & 0.5291 & 0.7681 & 0.4239 & 0.4239 & 0.4239 & 0.2898 & 0.4239 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/ \\ C-MAM Audio\end{tabular}} & \textbf{0.6557} & \textbf{0.6802} & \textbf{0.7177} & \textbf{0.6557} & \textbf{0.6557} & \textbf{0.6557} & \textbf{0.6527} & \textbf{0.6557} \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Video\end{tabular}}       & 0.6641 & 0.7192 & 0.7979 & 0.6641 & 0.6641 & 0.6641 & 0.6512 & 0.6641 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}MM w/\\ C-MAM Video\end{tabular}}  & \textbf{0.7241} & \textbf{0.7644} & \textbf{0.8118} & \textbf{0.7242} & \textbf{0.7242} & \textbf{0.7241} & \textbf{0.7212} & \textbf{0.7242} \\ \hline
+\end{tabular}%
+% }
+\end{table}

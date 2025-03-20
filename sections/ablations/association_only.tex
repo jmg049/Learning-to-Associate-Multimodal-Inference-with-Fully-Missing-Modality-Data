@@ -1,0 +1,79 @@
+\subsection{The Role of Modality-Specific Encoders in C-MAMs}
+\label{sec:encoders}
+In this ablation study, we examine the impact of training modality-specific encoders within Cross-modal Association Models (C-MAMs). Specifically, we investigate whether initializing the C-MAM encoders with the weights of their corresponding modality encoders from the base multimodal model provides benefits for reconstructing missing modality embeddings, or if the association network alone is sufficient. This analysis has significant implications for training efficiency, model size, and inference performance.
+
+To assess this, we conduct experiments using the Utterance Fusion model on the MOSEI dataset. We compare three configurations: (1) training only the association network while keeping the modality-specific encoders frozen, (2) training both the association network and encoders from randomly initialized weights, and (3) training the encoders after initializing them with their weights from the base multimodal model. The results, presented in Tables~\ref{tab:no_encoder_results} and~\ref{tab:no_encoders_mean}, highlight key trade-offs between reconstruction performance and computational cost.
+
+\subsubsection{Performance Trade-offs}
+The results demonstrate that \textbf{training encoders from scratch does not improve performance and, in many cases, degrades it} (Table~\ref{tab:no_encoders_mean}). This is particularly evident for unimodal conditions, where randomly initialised encoders perform worse than their frozen counterparts. This suggests that the association network alone is often sufficient when used in conjunction with pre-trained modality-specific embeddings.
+
+Conversely, \textbf{initializing C-MAM encoders with their weights from the base model yields performance improvements in some cases}, particularly for \textbf{A (+0.0400) and V (+0.0451)}. However, gains are inconsistent across modalities, with negligible or negative effects observed for \textbf{T (-0.0019) and AT (-0.0050)}. These findings indicate that while weight initialisation can enhance reconstruction quality, it is not universally beneficial across all modality configurations.
+
+\subsubsection{Computational and Storage Considerations}
+A crucial consideration when training modality-specific encoders is the \textbf{increase in training time and storage requirements}. Unlike the association networks, which are inherently lightweight in this work, incorporating additional encoders would significantly increase the overall model size and computational cost. Table~\ref{tab:param_counts} provides resource measurements for the association model alone, illustrating its efficiency. Since training encoders introduces additional parameters and storage overhead, their inclusion would result in a model that is substantially larger and computationally more demanding compared to using the association network alone. Training just the association network also leads to decreased inference times as the embeddings produced by the base model are used for both classification and reconstruction, whereas if the C-MAM encoders are trained in any way, then they must be used at inference time, increasing the time taken to make a prediction.
+
+\subsubsection{Flexible Training Strategies}
+A key advantage of the C-MAM framework is its \textbf{flexibility in training strategies}. Since reconstruction is fully decoupled from the classification task, different configurations can be tailored to specific requirements. For example, in practical deployments, one could \textbf{train C-MAM encoders using their initialized weights only for critical modalities while training the remaining association models without them}. This selective training approach enables a balance between performance and efficiency, ensuring that C-MAMs can be adapted to varying computational constraints.
+
+\subsubsection{Conclusion}
+These results indicate that \textbf{the association network alone is often sufficient}, with C-MAM encoders initialized with their weights from the base multimodal model offering improvements only in select cases. Moreover, while training these encoders can enhance reconstruction quality, it comes at the cost of increased training time and storage requirements. The modular nature of C-MAMs enables \textbf{task-specific optimization}, allowing practitioners to selectively train encoders based on the demands of the application. Future work will extend this analysis to more models and datasets. 
+
+
+
+\begin{table}[]
+\centering
+\caption{Performance comparison between training the association model only, training the association model with the modality-specific encoders from randomly initialised weights (from scratch) and training the association model with the modality-specific encoders initialised with the weight of the corresponding encoder in the base multimodal model. }
+\label{tab:no_encoder_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{cl|ccccc}
+\hline
+\textbf{\begin{tabular}[c]{@{}c@{}}Modalities\\ Available\end{tabular}} &
+  \multicolumn{1}{c|}{\textbf{Metric}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Association\\ Only\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Randomly \\ Initialised Encoders\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Random \\ Initialisation Difference\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Fine-tuned\\ Encoders\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Fine-tuned \\ Difference\end{tabular}} \\ \hline
+\multirow{4}{*}{\textbf{A}}  & \textbf{Non0 Accuracy}    & 0.5802 & 0.5808 & \textbf{0.0006}  & 0.6265 & \textbf{0.0463} \\
+                             & \textbf{Has0 Accuracy}    & 0.6154 & 0.5754 & \textbf{-0.0400} & 0.6613 & \textbf{0.0459} \\
+                             & \textbf{Non0 F1 Weighted} & 0.5809 & 0.5665 & \textbf{-0.0144} & 0.6201 & \textbf{0.0392} \\
+                             & \textbf{Has0 F1 Weighted} & 0.6357 & 0.5814 & \textbf{-0.0543} & 0.6641 & \textbf{0.0284} \\ \hline
+\multirow{4}{*}{\textbf{V}}  & \textbf{Non0 Accuracy}    & 0.6036 & 0.6179 & \textbf{0.0143}  & 0.6214 & \textbf{0.0178} \\
+                             & \textbf{Has0 Accuracy}    & 0.6779 & 0.6844 & \textbf{0.0065}  & 0.7421 & \textbf{0.0642} \\
+                             & \textbf{Non0 F1 Weighted} & 0.5739 & 0.5908 & \textbf{0.0169}  & 0.6178 & \textbf{0.0439} \\
+                             & \textbf{Has0 F1 Weighted} & 0.6492 & 0.6539 & \textbf{0.0047}  & 0.7037 & \textbf{0.0545} \\ \hline
+\multirow{4}{*}{\textbf{T}}  & \textbf{Non0 Accuracy}    & 0.8181 & 0.8035 & -0.0146          & 0.8139 & -0.0042         \\
+                             & \textbf{Has0 Accuracy}    & 0.7690 & 0.7496 & -0.0194          & 0.7678 & -0.0012         \\
+                             & \textbf{Non0 F1 Weighted} & 0.8202 & 0.8056 & -0.0146          & 0.8162 & -0.0040         \\
+                             & \textbf{Has0 F1 Weighted} & 0.7482 & 0.7401 & -0.0081          & 0.7502 & 0.0020          \\ \hline
+\multirow{4}{*}{\textbf{AV}} & \textbf{Non0 Accuracy}    & 0.6279 & 0.6504 & 0.0225           & 0.6439 & 0.0160          \\
+                             & \textbf{Has0 Accuracy}    & 0.7434 & 0.7419 & -0.0015          & 0.7345 & -0.0089         \\
+                             & \textbf{Non0 F1 Weighted} & 0.6241 & 0.6468 & 0.0227           & 0.6434 & 0.0193          \\
+                             & \textbf{Has0 F1 Weighted} & 0.7026 & 0.7008 & -0.0018          & 0.6999 & -0.0027         \\ \hline
+\multirow{4}{*}{\textbf{AT}} & \textbf{Non0 Accuracy}    & 0.8154 & 0.8059 & -0.0095          & 0.8075 & -0.0079         \\
+                             & \textbf{Has0 Accuracy}    & 0.7665 & 0.7621 & -0.0044          & 0.7648 & -0.0017         \\
+                             & \textbf{Non0 F1 Weighted} & 0.8181 & 0.8087 & -0.0094          & 0.8102 & -0.0079         \\
+                             & \textbf{Has0 F1 Weighted} & 0.7550 & 0.7516 & -0.0034          & 0.7526 & -0.0024         \\ \hline
+\multirow{4}{*}{\textbf{VT}} & \textbf{Non0 Accuracy}    & 0.8095 & 0.8149 & \textbf{0.0054}  & 0.8123 & \textbf{0.0028} \\
+                             & \textbf{Has0 Accuracy}    & 0.7633 & 0.7668 & \textbf{0.0035}  & 0.7644 & \textbf{0.0011} \\
+                             & \textbf{Non0 F1 Weighted} & 0.8122 & 0.8173 & \textbf{0.0051}  & 0.8149 & \textbf{0.0027} \\
+                             & \textbf{Has0 F1 Weighted} & 0.7508 & 0.7550 & \textbf{0.0042}  & 0.7510 & \textbf{0.0002} \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[]
+\centering
+\caption{Mean difference in performance (relative to not training just the association network) across four metrics, Has0 Accuracy, Non0 Accuracy, Has0 F1-Weighted, and Non0 F1-Weighted, when including modality-specific encoders for six different modality conditions. The “Encoders From Scratch” column shows the performance change when training new encoders from randomly initialized weights, whereas “Encoders Fine-tuned” shows the performance change when starting from pre-trained encoders of the base multimodal model and then further training them for modality reconstruction. Negative values indicate lower performance compared to the baseline (no encoder training), and positive values indicate performance improvements.}
+\label{tab:no_encoders_mean}
+\begin{tabular}{c|cc}
+\hline
+ & \textbf{\begin{tabular}[c]{@{}c@{}}Randomly\\ Initialised Encoders\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Fine-tuned\\ Encoders\end{tabular}} \\ \hline
+\textbf{A}  & -0.0270 & \textbf{0.0400} \\
+\textbf{V}  & 0.0106  & \textbf{0.0451} \\
+\textbf{T}  & -0.0142 & -0.0019         \\
+\textbf{AV} & 0.0105  & \textbf{0.0059} \\
+\textbf{AT} & -0.0067 & -0.0050         \\
+\textbf{VT} & 0.0046  & \textbf{0.0017} \\ \hline
+\end{tabular}
+\end{table}

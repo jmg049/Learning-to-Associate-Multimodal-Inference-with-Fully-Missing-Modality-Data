@@ -1,0 +1,43 @@
+\documentclass[a4paper,12pt]{letter}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+
+\signature{Jack Geraghty, Andrew Hines, and Fatemeh Golpayegani}
+\address{School of Computer Science\\University College Dublin\\Dublin, Ireland\\\texttt{jack.geraghty@ucd.ie}}
+
+\begin{document}
+
+\begin{letter}{Editor-in-Chief\\ACM Transactions on Intelligent Systems and Technology (TIST)}
+
+\opening{Dear Huan,}
+
+We appreciate the opportunity to revise and resubmit our manuscript, \emph{``Learning to Associate: Multimodal Inference with Fully Missing Modality Data"}, to ACM TIST. We are grateful to the reviewers for their detailed and constructive feedback, which has helped us significantly improve the manuscript. Below, we summarise the major revisions undertaken in response to their comments.
+
+The abstract has been refined to improve clarity and highlight the problem--solution--impact structure, explicitly listing our core contributions. The introduction has been reorganised to emphasise real-world challenges, introduce Cross-Modal Association Models (C-MAMs) earlier, and clarify the different types of information handled, while further stressing the novelty of our post-training approach and targeted architecture. Parts of the related works section have been condensed for conciseness, and we have added a concluding paragraph discussing inference-time missing modality solutions.
+
+The section on C-MAMs has been revised to improve readability, incorporating a simplified figure, clearer mathematical formulations, and an improved algorithmic overview. The experimental setup has been refined by streamlining dataset descriptions and improving alignment with subsequent sections. The results section remains unchanged. The discussion has been expanded and reorganised to enhance core analyses, incorporate comprehensive ablation studies, address limitations, and propose future directions. The conclusion has been restructured to emphasise our contributions, limitations, and broader implications, including practical applications.
+
+To further strengthen our work, we have conducted several additional ablation studies:
+\begin{enumerate}
+    \item A statistical analysis of the reconstructed embeddings, assessing their alignment with ground-truth embeddings across multiple datasets.
+    \item An investigation into the impact of contrastive information across different datasets and models, examining how strongly contrastive modalities affect reconstruction performance.
+    \item An analysis of how the amount of training data affects the performance of our proposed method, evaluating whether C-MAMs can be effectively trained with limited data.
+    \item An analysis of how the amount of training data affects the performance of our proposed method, evaluating whether C-MAMs can be effectively trained with limited data. 
+    \item Additional results for the MOSEI dataset to provide further empirical validation.
+    \item An exploration of the role of modality-specific encoders in C-MAMs, determining whether fine-tuning them leads to better performance or if keeping them frozen is sufficient.
+    \item A detailed assessment of the number of parameters and the storage requirements for the C-MAMs trained in this paper, providing practical insights into their computational footprint.
+\end{enumerate}
+
+These new experiments strengthen our analysis of when and why C-MAMs work effectively, as well as their practical trade-offs in terms of data availability and computational efficiency. Furthermore, improvements in notation, figures, and explanations ensure better readability and comprehension.
+
+We believe that these revisions have substantially improved our manuscript and have addressed the reviewers' concerns. We sincerely appreciate the time and effort of the reviewers and the editorial team, and we hope that the revised manuscript now meets the standards for publication in ACM TIST.
+
+Thank you for your time and consideration. We look forward to your feedback.\newline
+
+\noindent Kind regards,
+
+Jack Geraghty, Andrew Hines and Fatemeh Golpayegani 
+
+\end{letter}
+
+\end{document}

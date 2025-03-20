@@ -1,0 +1,53 @@
+The following sections provide the mathematical definitions of the baseline models trained as part of this paper and for training a C-MAM. 
+
+Let $D$ be a multimodal dataset consisting of $n$ samples. Each sample, $D_j$, comprises of a modality pair, $(m_1, m_2)$ taken from the set $M={m_1, m_2}$, and a shared label $y$. 
+\begin{equation} \label{eq:dataset}
+    D = \{((m_1, m_2), y)_1, ..., ((m_1, m_2), y)_n\}
+\end{equation}
+
+\subsection{Unimodal Learning}
+This paper defines an unimodal model as comprising two components: a feature extraction network, $F$ and a classification network, $C$ (a set of one or more fully connected layers). $F$ is parameterised by $\phi_F$ and given a single modality observation $m$, $F$ will produce an $N$-dimensional feature vector $\gamma_{m}^N$.
+\begin{equation} \label{eq:uni_feature}
+    F_{\phi_F (m)} = \gamma_{m}^N
+\end{equation}
+
+The classification network, parameterised by $\phi_C$, produces a label using the feature vector $\gamma_{m}^N$.
+
+\begin{equation} \label{eq:uni_classification}
+    C_{\phi_C}(F_{\phi_F} (m)) = \hat{y}
+\end{equation}
+
+The training process of an unimodal model then involves minimising the empirical loss over the modality observations and the associated labels to produce an optimal set of parameters for $\phi_C$ and $\phi_F$. 
+
+\begin{equation} \label{eq:uni_train}
+    \phi_{C}^*, \phi_{F}^* = arg\:min_{\phi_C, \phi_F} \: \E (\Loss (C_{\phi_C}(F_{\phi_F} (m) ), y)
+\end{equation}
+
+\subsection{Multimodal Learning}
+The above equations can be adapted to fit the multimodal context. Instead of having one feature extraction network, a multimodal model will have $M$ feature extraction networks, $F_{mm} = \{F_{m_1}, F_{m_2}\}$. Prior to the classification network the feature vectors, $\{\gamma_{m_1}^{N_{m_1}}, \gamma_{m_2}^{N_{m_2}}\}$, are fused, using a fusion operation $\oplus$, to produce a single feature vector. The classification network remains similar to the equation described in Equation \ref{eq:uni_classification}.
+\begin{equation}
+    C_{mm}(F_{m_1}(m_1) \oplus F_{m_2}(m_2)) = \hat{y}
+\end{equation}
+
+The training process of a multimodal model then involves minimising the empirical loss over the modality pair observations and the associated labels to produce an optimal set of parameters for $\phi_{C_{mm}}$ and $\phi_{F_{mm}}$. 
+
+\begin{equation} \label{eq:mm_training}
+    \phi_{C_{mm}}^*, \phi_{F_{mm}}^* = arg\:min_{(\phi_{C_{mm}}, \phi_{F_{mm}})} \: \E (\Loss(C_{mm}(F_{m_1}(m_1) \oplus F_{m_2}(m_2)), y))
+\end{equation}
+
+\subsection{C-MAM Learning}
+Before a mathematical formulation of the C-MAM training process, the objectives of such a model need to be defined. C-MAMs have two objectives:
+\begin{enumerate}
+    \item Minimise the loss between the generated features and those produced by a pre-trained feature extraction network.
+    \item The generated features should be usable as input to the multimodal classification model, where usable is defined as providing better performance when compared to the feature being missing.
+\end{enumerate}
+
+Given some trained multimodal model, $C_{mm}^*$, which is comprised of two trained feature extraction networks, $F_{m_1}^*$ and $F_{m_2}^*$, and a modality pairing $\{m_1, m_2\}$ the objective is to train two new, $A_{m_1}$ and $A_{m_2}$ to produce the corresponding feature vectors of the other modality. These models are trained by minimising the loss between the generated feature vectors and the feature vectors produced by the feature extraction network of the other modality. This process is described in Equations \ref{eq:c_mam_train_a1} and \ref{eq:c_mam_train_a2}.
+
+\begin{equation} \label{eq:c_mam_train_a1}
+    \phi_{A_{m_1}}^* = arg min_{\tiny \phi_{A_{m_1}}} \mathrm{E} (\Loss  (A_{m_1}(m_1), F_{m_2}^*(m_2)))
+\end{equation}
+
+\begin{equation}\label{eq:c_mam_train_a2}
+    \phi_{A_{m_2}}^* = arg min_{\tiny \phi_{A_{m_2}}} \mathrm{E} (\Loss  (A_{m_2}(m_2), F_{m_1}^*(m_1)))
+\end{equation}

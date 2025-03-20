@@ -1,0 +1,17 @@
+\begin{table}[h!]
+\footnotesize
+\centering
+\caption{Performance metrics for the models trained on the MM-IMDb dataset. w/o indicates that the modality was 100\% missing during inference.}
+\label{tab:mmimdb_res}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|cccc}
+\hline
+\multicolumn{1}{c|}{\textbf{MM-IMDb}} & \textbf{F1 - Weighted} & \textbf{F1 - Samples} & \textbf{F1 - Micro} & \textbf{F1 - Macro} \\ \hline
+\textbf{MM}                & 0.5804 & 0.5982  & 0.6028 & 0.43919 \\ \hline
+\textbf{MM w/o Image}      & 0.4563 & 0.5208  & 0.5188 & 0.2805  \\
+\textbf{MM w/ C-MAM Image} & \textbf{0.5743} & \textbf{0.5986}  & \textbf{0.6015} & \textbf{0.4232}  \\ \hline
+\textbf{MM w/o Text}       & 0.1307 & 0.14485 & 0.1528 & 0.0815  \\
+\textbf{MM w/ C-MAM Text}  & \textbf{0.4019} & \textbf{0.4489}  & \textbf{0.457}7 & \textbf{0.2282}  \\ \hline
+\end{tabular}%
+}
+\end{table}

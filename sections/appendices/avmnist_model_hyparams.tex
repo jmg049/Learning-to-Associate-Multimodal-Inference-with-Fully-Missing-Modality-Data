@@ -1,0 +1,84 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[h!]
+\footnotesize
+\centering
+\caption{Hyperparameters used for the various models trained on the AVMNIST dataset.}
+\label{tab:avmnist_hypparams}
+\begin{tabular}{lccc}
+\hline
+\multicolumn{4}{c}{\textbf{AVMNIST Hyperparameters}}                     \\ \hline
+\multicolumn{1}{l|}{\textbf{Parameter}} & \textbf{MM} & \textbf{C-MAM Audio} & \textbf{C-MAM Image} \\ \hline
+\multicolumn{1}{l|}{\textbf{Epochs}}        & 40           & 20   & 20   \\
+\multicolumn{1}{l|}{\textbf{Loss Function}} & CrossEntropy & MSE  & MSE  \\
+\multicolumn{1}{l|}{\textbf{Optimizer}}     & Adam         & Adam & Adam \\
+\multicolumn{1}{l|}{\textbf{Learning Rate}} & 1e-5         & 1e-3 & 1e-3 \\
+\multicolumn{1}{l|}{\textbf{Weight Decay}}  & 1e-4         & 0.0  & 0.0  \\
+\multicolumn{1}{l|}{\textbf{Batch Size}}    & 128          & 32   & 128  \\ \hline
+\end{tabular}%
+\end{table}
+
+\begin{table}[h!]
+    \footnotesize
+    \caption{Architectures for each model trained on the AVMNIST dataset.}
+    \label{tab:avmnist}
+    \centering
+    \begin{minipage}[t]{0.44\textwidth}
+    \centering
+    \vspace{0pt} % Align tops
+        \begin{tabular}{clllllclllll}
+            \hline
+            \multicolumn{12}{c}{\textbf{AVMNIST Multimodal Model}}           \\ \hline
+            \multicolumn{6}{c|}{\textbf{Audio Subnet}}   & \multicolumn{6}{c}{\textbf{Video Subnet}} \\ \hline
+            \multicolumn{6}{c|}{}   & \multicolumn{6}{c}{ConvBlock  - (1, 32, 32, 32)} \\ \cline{7-12}
+            \multicolumn{6}{c|}{}   & \multicolumn{6}{c}{MaxPool2d - (2, 2)} \\ \cline{7-12}
+            \multicolumn{6}{c|}{}   & \multicolumn{6}{c}{ConvBlock - (32, 64, 64, 64)} \\ \cline{7-12}
+            \multicolumn{6}{c|}{}   & \multicolumn{6}{c}{MaxPool2d - (2, 2)} \\ \hline
+            \multicolumn{6}{c|}{ConvBlock  - (1, 32, 32, 32)}      & \multicolumn{6}{c}{Linear - (3136, 128)}    \\ \hline
+            \multicolumn{6}{c|}{MaxPool2d - (2, 2)} &           \multicolumn{6}{c}{ReLU}      \\ \hline
+            \multicolumn{6}{c|}{ConvBlock - (32, 64, 64, 64)}       & \multicolumn{6}{c}{Linear - (3136, 128)}    \\ \hline
+            \multicolumn{6}{c|}{MaxPool2d - (3, 3)}     & \multicolumn{6}{c}{ReLU}      \\ \hline
+            \multicolumn{6}{c|}{Linear - (4800, 128)}   & \multicolumn{6}{c}{Linear - (128, 64)}    \\ \hline
+            \multicolumn{12}{c}{Linear - (128 + 64, 64)}                                      \\ \hline
+            \multicolumn{12}{c}{ReLU}                                        \\ \hline
+            \multicolumn{12}{c}{Linear - (64, 32)}                                      \\ \hline
+            \multicolumn{12}{c}{ReLU}                                        \\ \hline
+            \multicolumn{12}{c}{Linear - (32, 10)}                                      \\ \hline
+        \end{tabular}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.19\textwidth}
+    \centering
+    \vspace{0pt} % Align tops
+        \begin{tabular}{|clllll|}
+        \hline
+        \multicolumn{6}{c}{\textbf{AVMNIST Audio C-MAM}} \\ \hline
+            \multicolumn{6}{c}{ConvBlock - (1, 32, 32, 32)}                     \\ \hline
+            \multicolumn{6}{c}{MaxPool2d - (2, 2)}                       \\ \hline
+            \multicolumn{6}{c}{ConvBlock - (32, 64, 64, 64)}                     \\ \hline
+            \multicolumn{6}{c}{MaxPool2d - (2, 2)}                        \\ \hline
+            \multicolumn{6}{c}{Linear - (3136, 128)}                        \\ \hline
+            \multicolumn{6}{c}{ReLU}                        \\ \hline
+            \multicolumn{6}{c}{Linear - (128, 64)}                        \\ \hline
+            \multicolumn{6}{c}{ReLU}                        \\ \hline
+            \multicolumn{6}{c}{Linear - {64, 128}}\\ \hline
+        \end{tabular}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.2\textwidth}
+    \centering
+    \vspace{0pt} % Align tops
+        \begin{tabular}{|clllll|}
+        \hline
+        \multicolumn{6}{c}{\textbf{AVMNIST Image C-MAM}} \\ \hline
+        \multicolumn{6}{c}{ConvBlock - (1, 32, 32, 32)}                     \\ \hline
+        \multicolumn{6}{c}{MaxPool2d - (2, 2)}                       \\ \hline
+        \multicolumn{6}{c}{ConvBlock - (32, 64, 64, 64)}                     \\ \hline
+        \multicolumn{6}{c}{MaxPool2d - (3, 3)}                        \\ \hline
+        \multicolumn{6}{c}{Linear - (4800, 128)}                   \\ \hline
+        \multicolumn{6}{c}{ReLU}                   \\ \hline
+        \multicolumn{6}{c}{Linear - (128, 64)}                   \\ \hline
+        \end{tabular}
+    \end{minipage}%
+    \hfill
+\end{table}

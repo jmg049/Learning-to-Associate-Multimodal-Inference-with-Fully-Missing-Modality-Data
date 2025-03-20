@@ -1,0 +1,157 @@
+\begin{table}[h!]
+\footnotesize
+\centering
+\caption{Performance metrics for the baseline and robust EMT-DLFR model trained on the MOSI and MOSEI datasets. The \textit{Non0} and \textit{Has0} metrics are two methods of analysing the performance in multimodal sentiment analysis. 0 is typically used to represent \textit{neutral} sentiment and the \textit{Non0} refers to calculating the metrics excluding those belonging to the neutral class.}
+\label{tab:emt_results}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{l|llllll|cccccc}
+\hline
+\multicolumn{1}{c|}{\multirow{2}{*}{\textbf{Model}}} &
+  \multicolumn{6}{c|}{\textbf{MOSI}} &
+  \multicolumn{6}{c}{\textbf{MOSEI}} \\ \cline{2-13} 
+\multicolumn{1}{c|}{} &
+  \textbf{Has0 Acc.} &
+  \textbf{Non0 Acc.} &
+  \textbf{Has0 F1} &
+  \textbf{Non0 F1} &
+  \textbf{MAE} &
+  \textbf{Corr} &
+  \multicolumn{1}{l}{\textbf{Has0 Acc.}} &
+  \multicolumn{1}{l}{\textbf{Non0 Acc.}} &
+  \multicolumn{1}{l}{\textbf{Has0 F1}} &
+  \multicolumn{1}{l}{\textbf{Non0 F1}} &
+  \multicolumn{1}{l}{\textbf{MAE}} &
+  \multicolumn{1}{l}{\textbf{Corr}} \\ \hline
+\textbf{EMT-DLFR} &
+  0.8246 &
+  0.8404 &
+  0.8242 &
+  0.8406 &
+  0.7157 &
+  0.7937 &
+  0.7746 &
+  0.8310 &
+  0.7836 &
+  0.8310 &
+  0.5322 &
+  0.7644 \\ \hline
+\textbf{EMT-DLFR w/o Audio} &
+  0.8260 &
+  0.8420 &
+  0.8256 &
+  0.8421 &
+  0.7155 &
+  0.7937 &
+  0.8153 &
+  0.8476 &
+  0.8200 &
+  0.8475 &
+  0.5328 &
+  0.7631 \\
+\textbf{EMT-DLFR w/o Video} &
+  0.8246 &
+  0.8420 &
+  0.8256 &
+  0.8421 &
+  0.7157 &
+  0.7937 &
+  0.7766 &
+  0.8288 &
+  0.7854 &
+  0.8302 &
+  0.5383 &
+  0.7588 \\
+\textbf{EMT-DLFR w/o Text} &
+  0.5525 &
+  0.5777 &
+  0.3998 &
+  0.4300 &
+  \textbf{1.3754} &
+  0.0707 &
+  \textbf{0.6758} &
+  0.6149 &
+  0.5954 &
+  0.5130 &
+  0.8395 &
+  0.1688 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}EMT-DLFR \\ w/ C-MAM Text\end{tabular}} &
+  \textbf{0.6070} &
+  \textbf{0.5849} &
+  \textbf{0.4746} &
+  \textbf{0.4478} &
+  1.3808 &
+  \textbf{0.1912} &
+  0.6120 &
+  \textbf{0.6459} &
+  \textbf{0.6238} &
+  \textbf{0.6140} &
+  \textbf{0.7613} &
+  \textbf{0.2522} \\ \hline
+\textbf{Robust EMT-DLFR} &
+  0.8314 &
+  0.8496 &
+  0.8302 &
+  0.8490 &
+  0.7219 &
+  0.7947 &
+  0.8015 &
+  0.8448 &
+  08082 &
+  0.8457 &
+  0.5449 &
+  0.7567 \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR\\ w/o Audio\end{tabular}} &
+  0.8329 &
+  0.8511 &
+  0.8316 &
+  0.8505 &
+  0.7217 &
+  0.7946 &
+  0.8058 &
+  0.8477 &
+  0.8119 &
+  0.8481 &
+  0.5457 &
+  0.7568 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR\\ w/o Video\end{tabular}} &
+  0.8299 &
+  0.8481 &
+  0.8287 &
+  0.8474 &
+  0.7229 &
+  0.7943 &
+  0.7858 &
+  0.8348 &
+  0.7938 &
+  0.8360 &
+  0.5505 &
+  0.7498 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR \\ w/o Text\end{tabular}} &
+  0.5515 &
+  0.5762 &
+  0.4078 &
+  0.4373 &
+  1.3753 &
+  0.0271 &
+  0.5891 &
+  0.5865 &
+  0.59089 &
+  0.5825 &
+  0.8321 &
+  0.1437 \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR\\ w/ C-MAM Text\end{tabular}} &
+  \textbf{0.6579} &
+  \textbf{0.6466} &
+  \textbf{0.5672} &
+  \textbf{0.552} &
+  \textbf{1.3324} &
+  \textbf{0.3319} &
+  \textbf{0.6713} &
+  \textbf{0.6495} &
+  \textbf{0.6633} &
+  \textbf{0.6272} &
+  \textbf{0.7557} &
+  \textbf{0.2049} \\ \hline
+\end{tabular}%
+}
+\end{table}

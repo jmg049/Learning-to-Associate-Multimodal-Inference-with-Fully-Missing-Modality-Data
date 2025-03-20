@@ -1,0 +1,305 @@
+The following section presents the results of the experiments conducted. Each experimental result is presented uniformly. The baseline results are presented first, followed by the model with a missing modality and with the generated C-MAM features. This repeats for each modality and model. For the MMIN, we follow the presentation style of the proposing paper, which presents modality combinations as columns. This style is not compatible with the number of metrics recorded for the other models. 
+
+
+\subsection{Experiment 1 - \textit{Toy} datasets and Models}
+\Cref{tab:sns_results,tab:avmnist_res} report the results of the first experiment, with \Cref{fig:sns_missing,fig:avmnist_missing} providing a more detailed breakdown of some metrics as the amount of missing modality data increases. Based on the results observed when evaluating the AudioSet model, there is a clear imbalance towards using the audio modality. This is seen by significant differences in some of the reported metrics when audio is missing compared to video. Using C-MAMs reduces the performance gap between the full modality baseline and the missing modality baselines across all metrics except for weighted precision when using the audio-generated features. When the baseline model uses the generated video features, the performance gap is nearly entirely mitigated with only a maximum of a ~2\% drop across all metrics. While not as close to the baseline metrics, using the C-MAM-generated audio features reduces the performance gap by an average of 20\%.
+
+
+\begin{table}[htbp!]
+    \footnotesize
+    \centering
+    \caption{Performance metrics for the models trained on the AudioSet dataset. w/o indicates that the modality was 100\% missing during inference.}
+    \label{tab:sns_results}
+    \begin{tabular}{l|ccccclcc}
+    \hline
+    \multicolumn{1}{c|}{\textbf{AudioSet}} &
+      \textbf{Accuracy} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Balanced\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Precision -\\ Micro\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Weighted\end{tabular}} &
+      \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Recall -\\ Micro\end{tabular}}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}F1 - \\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Micro\end{tabular}} \\ \hline
+    \textbf{MM}                                                           & 0.7451 & 0.7805 & 0.8177 & 0.7451 & 0.7451 & 0.7451 & 0.7448 & 0.7451 \\ \hline
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Audio\end{tabular}}       & 0.4239 & 0.5291 & 0.7681 & 0.4239 & 0.4239 & 0.4239 & 0.2898 & 0.4239 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/ \\ C-MAM Audio\end{tabular}} & \textbf{0.6557} & \textbf{0.6802} & \textbf{0.7177} & \textbf{0.6557} & \textbf{0.6557} & \textbf{0.6557} & \textbf{0.6527} & \textbf{0.6557} \\ \hline
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Video\end{tabular}}       & 0.6641 & 0.7192 & 0.7979 & 0.6641 & 0.6641 & 0.6641 & 0.6512 & 0.6641 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/\\ C-MAM Video\end{tabular}}  & \textbf{0.7241} & \textbf{0.7644} & \textbf{0.8118} & \textbf{0.7242} & \textbf{0.7242} & \textbf{0.7241} & \textbf{0.7212} & \textbf{0.7242} \\ \hline
+    \end{tabular}%
+\end{table}
+
+
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/sns_results/sns_missing_plots.pdf}
+    \caption{AudioSet: Changes in performance metrics with respect to increasing amounts of missing data.}
+    \label{fig:sns_missing}
+\end{figure}
+
+Based on the recorded metrics in \Cref{tab:avmnist_res}, the AVMNIST model clearly utilised the information in the image modality more than the audio modality. When the audio modality was missing, the performance metrics dropped by an average of 2\%-3\%; when the images were missing, the performance dropped by up to nearly 40\% in some metrics. Again, using C-MAMs provides a consistent improvement in performance compared to when modality is missing and for both modalities, using a C-MAM trained on the other modality results in the model performance returning to at least 99\% across all metrics.
+
+\begin{table}[htbp!]
+    \footnotesize
+    \centering
+    \caption{Performance metrics for the models trained on the AVMINST dataset. w/o indicates that the modality was 100\% missing during inference.}
+    \label{tab:avmnist_res}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{l|cccccccccc}
+    \hline
+    \multicolumn{1}{c|}{\textbf{AVMNIST}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 1\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 2\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 5\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 7\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Micro\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Micro\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Micro\end{tabular}} \\ \hline
+    \textbf{MM}                                                           & 0.9999 & 0.9999 & 1.000  & 1.000  & 0.9999 & 0.9999 & 0.9999 & 0.9999 & 0.9999 & 0.9999 \\ \hline
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Audio\end{tabular}}       & 0.9699 & 0.9924 & \textbf{0.9996} & \textbf{0.9999} & 0.9720 & 0.9699 & 0.9699 & 0.9700 & 0.9696 & 0.9699 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/ \\ C-MAM Audio\end{tabular}} & \textbf{0.9970} & 0.9991 & 0.9999 & 0.9999 & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} & \textbf{0.9971} \\ \hline
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/o\\ Image\end{tabular}}       & 0.6166 & 0.9364 & 0.9712 & 0.9750 & 0.8800 & 0.6166 & 0.6166 & 0.6166 & 0.6253 & 0.6166 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}MM w/\\ C-MAM Image\end{tabular}}  & \textbf{0.9997} & \textbf{1.000}  & \textbf{1.000}  & \textbf{1.000}  & \textbf{0.9997} & \textbf{0.9997} & \textbf{0.9997} & \textbf{0.9997} &\textbf{ 0.9997} & \textbf{0.9997} \\ \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/avmnist_results/avmnist_missing_plots.pdf}
+    \caption{AVMNIST: Changes in performance metrics with respect to increasing amounts of missing data.}
+    \label{fig:avmnist_missing}
+\end{figure}
+
+\subsection{Experiment 2 - Advanced datasets}
+\Cref{tab:ks_results,tab:mmimdb_res} and \Cref{fig:ks,fig:mmimdb} report the results of Experiment two. From \Cref{tab:ks_results} and \Cref{fig:ks} it is clear the Kinetics-Sounds model favours the video modality heavily. The performance metrics have no significant decrease ($\ge$1\%) when the audio is missing. However, when the video modality is missing, the performance metrics decrease by up to 75\%, with most dropping by approximately 66\%. C-MAMs improve all but one metric (F1-Micro when missing the audio modality) across both modalities. Despite no significant decrease in the performance metrics when the audio modality is missing, using a C-MAM still brought the performance metrics closer to the baseline metrics. Using a C-MAM to generate the missing video modality resulted in performance improvements between 20\%-25\%.
+
+\begin{table}[htbp!]
+    \footnotesize  
+  \centering
+
+    \caption{Performance metrics for the models trained on the Kinetics-Sounds dataset. w/o indicates that the modality was 100\% missing during inference.}
+    \label{tab:ks_results}
+    \resizebox{\columnwidth}{!}{%
+
+    \begin{tabular}{l|cccccccccc}
+    \hline
+    \textbf{Kinetics-Sounds} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 1\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 2\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 5\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Top 7\\ Accuracy\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Micro\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Micro\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Weighted\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Micro\end{tabular}} \\ \hline
+    \textbf{MM}                                                           & 0.7798 & 0.8634 & 0.9400 & 0.9578 & 0.7940 & 0.7800 & 0.7800 & 0.7800 & 0.7824 & 0.7800 \\ \hline
+    \textbf{\begin{tabular}[l]{@{}l@{}}MM w/o\\ Audio\end{tabular}}       & 0.7733 & \textbf{0.8536} & 0.9335 & \textbf{0.9536} & 0.7893 & 0.7733 & 0.7733 & 0.7733 & 0.7762 & \textbf{0.7733} \\
+    \textbf{\begin{tabular}[l]{@{}l@{}}MM w/ \\ C-MAM Audio\end{tabular}} & \textbf{0.7747} & 0.8536 & \textbf{0.9341} & \textbf{0.9546} & \textbf{0.7903} & \textbf{0.7748} & \textbf{0.7748} & \textbf{0.7748} & \textbf{0.7778} & 0.7696 \\ \hline
+    \textbf{\begin{tabular}[l]{@{}l@{}}MM w/o\\ Video\end{tabular}}       & 0.1116 & 0.1652 & 0.3327 & 0.4333 & 0.0450 & 0.1116 & 0.1116 & 0.1151 & 0.0548 & 0.1116 \\
+    \textbf{\begin{tabular}[l]{@{}l@{}}MM w/\\ C-MAM Video\end{tabular}}  & \textbf{0.2863} & \textbf{0.3975} & \textbf{0.5742} & \textbf{0.6529} & \textbf{0.2816} & \textbf{0.2863} & \textbf{0.2863} & \textbf{0.2863} & \textbf{0.2555} & \textbf{0.2863} \\ \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/kinetics_sounds_results/ks_missing_plots.pdf}
+    \caption{Kinetics-Sounds: Changes in performance metrics with respect to increasing amounts of missing data.}
+    \label{fig:ks}
+\end{figure}
+
+\Cref{tab:mmimdb_res} presents the results of evaluating the MM-IMDb model. Based on the observed results, the model weighs more information from the text modality. When the plot description of a movie is missing, the recorded F1-Scores decrease between 35\%-45\%, whereas the corresponding decrease when the movie poster is missing ranges between 7\%-15\%. When using a C-MAM to generate the missing image features using the available text, the performance metrics recovered nearly fully compared to the baseline performance with no missing data. Using a C-MAM to generate the missing text features also resulted in performance improvements between 14\%-30\%. 
+
+\begin{table}[htbp!]
+    \footnotesize
+    \centering
+    \caption{Performance metrics for the models trained on the MM-IMDb dataset. w/o indicates that the modality was 100\% missing during inference.}
+    \label{tab:mmimdb_res}
+    \begin{tabular}{l|cccc}
+    \hline
+    \multicolumn{1}{c|}{\textbf{MM-IMDb}} & \textbf{F1 - Weighted} & \textbf{F1 - Samples} & \textbf{F1 - Micro} & \textbf{F1 - Macro} \\ \hline
+    \textbf{MM}                & 0.5804 & 0.5982  & 0.6028 & 0.43919 \\ \hline
+    \textbf{MM w/o Image}      & 0.4563 & 0.5208  & 0.5188 & 0.2805  \\
+    \textbf{MM w/ C-MAM Image} & \textbf{0.5743} & \textbf{0.5986}  & \textbf{0.6015} & \textbf{0.4232}  \\ \hline
+    \textbf{MM w/o Text}       & 0.1307 & 0.14485 & 0.1528 & 0.0815  \\
+    \textbf{MM w/ C-MAM Text}  & \textbf{0.4019} & \textbf{0.4489}  & \textbf{0.457}7 & \textbf{0.2282}  \\ \hline
+    \end{tabular}%
+\end{table}
+
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=\textwidth]{imgs/mmimdb_results/mmimdb_missing_plots.pdf}
+    \caption{MM-IMDb: Changes in performance metrics with respect to increasing amounts of missing data.}
+    \label{fig:mmimdb}
+\end{figure}
+
+\subsection{Experiment 3 - State-of-the-Art Models}
+\begin{table}[htbp!]
+    \footnotesize
+    \centering
+    \caption{Performance metrics for the baseline and robust EMT-DLFR model trained on the MOSI and MOSEI datasets. The \textit{Non0} and \textit{Has0} metrics are two methods of analysing the performance in multimodal sentiment analysis. 0 is typically used to represent \textit{neutral} sentiment and the \textit{Non0} refers to calculating the metrics excluding those belonging to the neutral class.}
+    \label{tab:emt_results}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{l|llllll|cccccc}
+    \hline
+    \multicolumn{1}{c|}{\multirow{2}{*}{\textbf{Model}}} &
+      \multicolumn{6}{c|}{\textbf{MOSI}} &
+      \multicolumn{6}{c}{\textbf{MOSEI}} \\ \cline{2-13} 
+    \multicolumn{1}{c|}{} &
+      \textbf{Has0 Acc.} &
+      \textbf{Non0 Acc.} &
+      \textbf{Has0 F1} &
+      \textbf{Non0 F1} &
+      \textbf{MAE} &
+      \textbf{Corr} &
+      \multicolumn{1}{l}{\textbf{Has0 Acc.}} &
+      \multicolumn{1}{l}{\textbf{Non0 Acc.}} &
+      \multicolumn{1}{l}{\textbf{Has0 F1}} &
+      \multicolumn{1}{l}{\textbf{Non0 F1}} &
+      \multicolumn{1}{l}{\textbf{MAE}} &
+      \multicolumn{1}{l}{\textbf{Corr}} \\ \hline
+    \textbf{EMT-DLFR} &
+      0.8246 &
+      0.8404 &
+      0.8242 &
+      0.8406 &
+      0.7157 &
+      0.7937 &
+      0.7746 &
+      0.8310 &
+      0.7836 &
+      0.8310 &
+      0.5322 &
+      0.7644 \\ \hline
+    \textbf{EMT-DLFR w/o Audio} &
+      0.8260 &
+      0.8420 &
+      0.8256 &
+      0.8421 &
+      0.7155 &
+      0.7937 &
+      0.8153 &
+      0.8476 &
+      0.8200 &
+      0.8475 &
+      0.5328 &
+      0.7631 \\
+    \textbf{EMT-DLFR w/o Video} &
+      0.8246 &
+      0.8420 &
+      0.8256 &
+      0.8421 &
+      0.7157 &
+      0.7937 &
+      0.7766 &
+      0.8288 &
+      0.7854 &
+      0.8302 &
+      0.5383 &
+      0.7588 \\
+    \textbf{EMT-DLFR w/o Text} &
+      0.5525 &
+      0.5777 &
+      0.3998 &
+      0.4300 &
+      \textbf{1.3754} &
+      0.0707 &
+      \textbf{0.6758} &
+      0.6149 &
+      0.5954 &
+      0.5130 &
+      0.8395 &
+      0.1688 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}EMT-DLFR \\ w/ C-MAM Text\end{tabular}} &
+      \textbf{0.6070} &
+      \textbf{0.5849} &
+      \textbf{0.4746} &
+      \textbf{0.4478} &
+      1.3808 &
+      \textbf{0.1912} &
+      0.6120 &
+      \textbf{0.6459} &
+      \textbf{0.6238} &
+      \textbf{0.6140} &
+      \textbf{0.7613} &
+      \textbf{0.2522} \\ \hline
+    \textbf{Robust EMT-DLFR} &
+      0.8314 &
+      0.8496 &
+      0.8302 &
+      0.8490 &
+      0.7219 &
+      0.7947 &
+      0.8015 &
+      0.8448 &
+      08082 &
+      0.8457 &
+      0.5449 &
+      0.7567 \\ \hline
+    \textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR\\ w/o Audio\end{tabular}} &
+      0.8329 &
+      0.8511 &
+      0.8316 &
+      0.8505 &
+      0.7217 &
+      0.7946 &
+      0.8058 &
+      0.8477 &
+      0.8119 &
+      0.8481 &
+      0.5457 &
+      0.7568 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR\\ w/o Video\end{tabular}} &
+      0.8299 &
+      0.8481 &
+      0.8287 &
+      0.8474 &
+      0.7229 &
+      0.7943 &
+      0.7858 &
+      0.8348 &
+      0.7938 &
+      0.8360 &
+      0.5505 &
+      0.7498 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR \\ w/o Text\end{tabular}} &
+      0.5515 &
+      0.5762 &
+      0.4078 &
+      0.4373 &
+      1.3753 &
+      0.0271 &
+      0.5891 &
+      0.5865 &
+      0.59089 &
+      0.5825 &
+      0.8321 &
+      0.1437 \\
+    \textbf{\begin{tabular}[c]{@{}l@{}}Robust EMT-DLFR\\ w/ C-MAM Text\end{tabular}} &
+      \textbf{0.6579} &
+      \textbf{0.6466} &
+      \textbf{0.5672} &
+      \textbf{0.552} &
+      \textbf{1.3324} &
+      \textbf{0.3319} &
+      \textbf{0.6713} &
+      \textbf{0.6495} &
+      \textbf{0.6633} &
+      \textbf{0.6272} &
+      \textbf{0.7557} &
+      \textbf{0.2049} \\ \hline
+    \end{tabular}%
+    }
+\end{table}
+
+\Cref{tab:emt_results} reports the results of using the EMT-DLFR model for multimodal sentiment analysis on the MOSI and MOSEI datasets. For both model variations and datasets, the lack of a decrease (and sometimes an increase) in the performance metrics when either the audio or video modalities are missing demonstrates the over-reliance of the EMT-DLFR model on the text modality. When the text modality is missing, the non-robust version of the model for the MOSI dataset, the performance metrics decrease between 27\%-43\%. For the MOSEI dataset, this range is between 10\%-22\%. Using a C-MAM resulted in performance improvements across both datasets with two exceptions, the \textit{MAE} on the MOSI dataset and the \textit{Has0 Acc}. On the MOSEI dataset. These increases range from 1\%-10\% across both datasets. The robust version of the EMT-DLFR model marginally improves upon the baseline, but the C-MAM performance also improves. When using the audio and video modalities to generate a missing text feature for either dataset, the performance metrics increase between 4\%-16\%. C-MAM-generated features improve across all metrics, in contrast to the baseline model.
+
+\input{tables/mmin.tex}
+
+\Cref{tab:mmin_results} presents the results of using the MMIN for multimodal sentiment analysis and fully missing modality generation on the IEMOCAP and MSP-IMPROV datasets. For the MSP-IMPROV dataset, using C-MAMs results in improved performance compared to the MMIN approach. The only condition that has not improved is the full modality baseline. C-MAMs do not interfere with the baseline performance without missing data. Using C-MAMs resulted in improvements ranging from 2\%-4\%. For the IEMOCAP dataset, C-MAMs outperform the MMIN approach in all but one condition: text only. Using a C-MAM instead of the MMIN for all other conditions resulted in performance improvements ranging from 2\%-9\%.

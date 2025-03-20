@@ -1,0 +1,87 @@
+\subsection{Analysis of Contrastive Information Across Datasets}\label{sec:contrastive_info}
+
+Multimodal learning is typically assumed to leverage mutual and complementary information between modalities. However, this is not always the case in practice, as \textit{contrastive information}, where modality embeddings interfere with rather than enhance each other, can emerge due to training dynamics. To investigate this phenomenon, we analyze the \textit{learned modality-specific embeddings} in three datasets (AVMNIST, Kinetics-Sounds, and MOSEI) using a combination of statistical dependency tests. Our objective is to determine whether contrastive information exists in the model’s learned embeddings and how it affects missing modality reconstruction.
+
+For each dataset, we compute \textit{mutual information} (MI), \textit{conditional entropy} (H), \textit{pointwise mutual information} (PMI), \textit{cosine similarity}, and \textit{KL divergence} to assess the alignment between learned modality embeddings. We summarise our findings in Table~\ref{tab:contrastive_summary} and present the detailed numerical results below.
+\begin{table}[h!]
+    \footnotesize
+    \centering
+    \caption{Summary of contrastive information analysis across datasets. Mutual information (MI) and conditional entropy (H) values indicate whether combining modalities improves informativeness. Pointwise mutual information (PMI) measures dataset-level co-occurrence. Cosine similarity quantifies embedding alignment, and KL divergence reflects contrastive decision boundaries. Higher KL divergence and lower cosine similarity indicate stronger contrastive behaviour.}
+    \label{tab:contrastive_summary}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{l|ccc|c|c|c}
+    \hline
+    \textbf{Dataset} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}MI(X1, X2; Y) \\ Reduction\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}H(Y | X1, X2) \\ Compared to H(Y | X2)\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Modality \\ Dominance\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}PMI \\ (Co-occurrence)\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}Cosine \\ Similarity\end{tabular}} &
+      \textbf{\begin{tabular}[c]{@{}c@{}}KL Divergence \\ (Contrastive Boundaries)\end{tabular}} \\ \hline
+    \textbf{AVMNIST}         & Weak  & Reduced (0.1444 vs. 0.1656)  & Image  & High (6.8939)  & Near orthogonal (0.0057)  & Moderate (0.8522)  \\ \hline
+    \textbf{Kinetics-Sounds} & Strong  & Similar (0.5212 vs. 0.5013) & Video  & Moderate (0.0059)  & Near orthogonal (-0.0399)  & High (2.9541)  \\ \hline
+    \textbf{MOSEI}           & Moderate  & Reduced (0.4741 vs. 0.4650) & Text   & Low (0.0959)  & Moderate (0.28 - 0.38)  & Moderate (0.3379)  \\ \hline
+    \end{tabular}%
+    }
+    \end{table}
+    
+\textbf{AVMNIST} presents an interesting case where contrastive information is present but does not hinder reconstruction. The classification task is inherently simple, and audio and image data are highly redundant. Despite nearly orthogonal embeddings, reconstruction is highly effective, restoring performance to baseline levels. The key insight is that contrastive embeddings make multimodal fusion challenging but do not necessarily prevent useful reconstruction when the task itself is robust to noise or missing features.
+
+\begin{table}[h!]
+    \centering
+    \caption{Contrastive information analysis for AVMNIST. MI and H values are ordered as (X1; Y), (X2; Y), (X1, X2; Y) and (H(Y | X1), H(Y | X2), H(Y | X1, X2)), respectively. Despite high KL divergence, task redundancy allows full performance recovery.}
+    \label{tab:avmnist_contrastive}
+    \begin{tabular}{l|c}
+    \hline
+    \textbf{Metric} & \textbf{Audio-Image} \\ \hline
+    \textbf{Mutual Information (MI)} & 0.6841, 0.7444, 0.7243 \\
+    \textbf{Conditional Entropy (H)} & 0.2501, 0.1656, 0.1444 \\
+    \textbf{Pointwise Mutual Information (PMI)} & 6.8939 \\
+    \textbf{Cosine Similarity} & 0.0057 \\
+    \textbf{KL Divergence (X1 || X2)} & 1.0775 \\
+    \textbf{KL Divergence (X2 || X1)} & 0.6268 \\
+    \textbf{Symmetrized KL Divergence} & 0.8522 \\ \hline
+    \end{tabular}%
+\end{table}
+
+\textbf{Kinetics-Sounds} demonstrates the strongest contrastive behaviour among the datasets. The model relies heavily on video, with audio providing no additional information, as evidenced by MI(X1, X2; Y) < MI(X2; Y). KL divergence is high, showing that audio and video produce very different decision boundaries, while cosine similarity is nearly zero, confirming that their learned representations are nearly orthogonal. The failure of audio to contribute useful information is reflected in the lack of performance drop when audio is removed. However, C-MAMs still partially reconstruct missing video embeddings, suggesting that some useful signal remains.
+
+\begin{table}[h!]
+    \centering
+    \caption{Contrastive information analysis for Kinetics-Sounds. MI and H values are ordered as (X1; Y), (X2; Y), (X1, X2; Y) and (H(Y | X1), H(Y | X2), H(Y | X1, X2)), respectively. Strong contrastive behaviour is indicated by high KL divergence and near-zero cosine similarity.}
+    \label{tab:ks_contrastive}
+    \begin{tabular}{l|c}
+    \hline
+    \textbf{Metric} & \textbf{Audio-Video} \\ \hline
+    \textbf{Mutual Information (MI)} & 0.3397, 0.5283, 0.4656 \\
+    \textbf{Conditional Entropy (H)} & 1.3136, 0.5013, 0.5212 \\
+    \textbf{Pointwise Mutual Information (PMI)} & 0.0059 \\
+    \textbf{Cosine Similarity} & -0.0399 \\
+    \textbf{KL Divergence (X1 || X2)} & 4.5299 \\
+    \textbf{KL Divergence (X2 || X1)} & 1.3783 \\
+    \textbf{Symmetrized KL Divergence} & 2.9541 \\ \hline
+    \end{tabular}%
+\end{table}
+
+\textbf{MOSEI} exhibits weaker contrastive behaviour compared to Kinetics-Sounds but still shows modality dominance, with text being the primary predictive modality. Audio and video have low MI and moderate KL divergence, indicating that they are not strongly contrastive but are also not complementary. Cosine similarity values are higher than in Kinetics-Sounds, suggesting that modality embeddings have some degree of alignment, yet contrastive elements still exist, especially in audio-text and video-text pairs.
+
+\begin{table}[h!]
+    \centering
+    \caption{Contrastive information analysis for MOSEI across different modality pairs. MI and H values are ordered as (X1; Y), (X2; Y), (X1, X2; Y) and (H(Y | X1), H(Y | X2), H(Y | X1, X2)), respectively. Moderate contrastive behaviour is observed.}
+    \label{tab:mosei_contrastive}
+    \begin{tabular}{l|c|c|c}
+    \hline
+    \textbf{Metric} & \textbf{Audio-Video} & \textbf{Audio-Text} & \textbf{Video-Text} \\ \hline
+    \textbf{Mutual Information (MI)} & 0.0084, 0.0098, 0.0089 & 0.0078, 0.0823, 0.0459 & 0.0089, 0.0831, 0.0459 \\
+    \textbf{Conditional Entropy (H)} & 0.6554, 0.6562, 0.6459 & 0.6549, 0.4662, 0.4760 & 0.6557, 0.4650, 0.4741 \\
+    \textbf{Pointwise Mutual Information (PMI)} & 0.0059 & 0.0079 & 0.0959 \\
+    \textbf{Cosine Similarity} & 0.3816 & 0.2796 & 0.3005 \\
+    \textbf{KL Divergence (X1 || X2)} & 0.0647 & 0.5625 & 0.5555 \\
+    \textbf{KL Divergence (X2 || X1)} & 0.0612 & 0.1069 & 0.1203 \\
+    \textbf{Symmetrized KL Divergence} & 0.0629 & 0.3347 & 0.3379 \\ \hline
+    \end{tabular}%
+\end{table}
+
+\subsubsection{Conclusion}
+
+Contrastive embeddings are a learned phenomenon rather than an inherent property of the dataset. In all three cases, modality co-occurrence (PMI) was high, yet learned embeddings often became contrastive, particularly when one modality dominated predictions. Kinetics-Sounds exhibited the strongest contrastive behaviour, while MOSEI showed moderate contrastiveness. AVMNIST, despite having contrastive embeddings, still enabled near-perfect reconstruction, suggesting that contrastiveness does not always prevent reconstruction success when the classification task is sufficiently simple. The effectiveness of C-MAMs is highly dependent on the severity of contrastive behaviour, highlighting the need for training strategies that enforce better modality alignment.

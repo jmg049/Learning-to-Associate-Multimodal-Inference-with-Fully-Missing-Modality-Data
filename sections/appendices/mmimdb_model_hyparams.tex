@@ -1,0 +1,94 @@
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[h!]
+\footnotesize
+
+\centering
+\caption{Hyperparameters used for the various models trained on the MM-IMDb dataset.}
+\label{tab:mmimdb_hypparams}
+\begin{tabular}{lccc}
+\hline
+\multicolumn{4}{c}{\textbf{MM-IMDb Hyperparameters}}             \\ \hline
+\multicolumn{1}{l|}{\textbf{Parameter}}     & \textbf{MM}        & \textbf{C-MAM Image} & \textbf{C-MAM Text} \\ \hline
+\multicolumn{1}{l|}{\textbf{Epochs}}        & 200  & 200  & 200  \\
+\multicolumn{1}{l|}{\textbf{Loss Function}} & BinaryCrossEntropy & MSE                  & MSE                 \\
+\multicolumn{1}{l|}{\textbf{Optimizer}}     & Adam & Adam & Adam \\
+\multicolumn{1}{l|}{\textbf{Learning Rate}} & 1e-5 & 1e-5 & 1e-5 \\
+\multicolumn{1}{l|}{\textbf{Weight Decay}}  & 1e-3 & 1e-3 & 1e-3 \\
+\multicolumn{1}{l|}{\textbf{Batch Size}}    & 128  & 128  & 128  \\ \hline
+\end{tabular}%
+\end{table}
+
+\begin{table}[h!]
+    \footnotesize
+    \caption{Maxout layer used in the various MM-IMDb models trained.}
+    \label{tab:maxout}
+    \begin{tabular}{ll}
+    \hline
+    \multicolumn{2}{c}{\textbf{MaxOut - (input\_dim, output\_dim, N\_LAYERS)}}                             \\ \hline
+    \multicolumn{1}{c|}{\multirow{2}{*}{\textbf{MAX}}} & Linear$_1$ - (input\_dim, output\_dim)           \\ \cline{2-2} 
+    \multicolumn{1}{c|}{}                              & Linear$_{N\_LAYERS}$ - (input\_dim,output\_dim) \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\footnotesize
+    \caption{Architectures for each model trained on the MM-IMDb dataset.}    \centering
+    \begin{minipage}[t]{0.49\textwidth}
+    \centering
+    \vspace{0pt} % Align tops
+    \begin{tabular}{clllllclllll}
+        \hline
+        \multicolumn{12}{c}{\textbf{MM-IMDb Multimodal Model}}                                \\ \hline
+        \multicolumn{6}{c|}{\textbf{Image Subnet}} & \multicolumn{6}{c}{\textbf{Text Subnet}} \\ \hline
+        \multicolumn{6}{c|}{BatchNorm1d - (4096)}  & \multicolumn{6}{c}{BatchNorm1d - (300)}  \\ \hline
+        \multicolumn{6}{c|}{Linear - (4096, 512)}  & \multicolumn{6}{c}{Linear - (300, 512)}  \\ \hline
+        \multicolumn{6}{c|}{TanH}                  & \multicolumn{6}{c}{TanH}                 \\ \hline
+        \multicolumn{12}{c}{Linear - (512 + 512, 1)}                                          \\ \hline
+        \multicolumn{12}{c}{Sigmoid}                                                          \\ \hline
+        \multicolumn{12}{c}{BatchNorm1d - (512)}                                              \\ \hline
+        \multicolumn{12}{c}{Maxout - (512, 512)}                                              \\ \hline
+        \multicolumn{12}{c}{Dropout}                                                  \\ \hline
+        \multicolumn{12}{c}{BatchNorm1d - (512)}                                              \\ \hline
+        \multicolumn{12}{c}{Maxout - (512, 512)}                                              \\ \hline
+        \multicolumn{12}{c}{Dropout}                                                  \\ \hline
+        \multicolumn{12}{c}{BatchNorm1d - (512)}                                              \\ \hline
+        \multicolumn{12}{c}{Linear - (512, 23)}                                               \\ \hline
+        \end{tabular}%
+
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.2\textwidth}
+    \centering
+    \vspace{0pt} % Align tops
+    \begin{tabular}{clllll}
+        \hline
+        \multicolumn{6}{c}{\textbf{MM-IMDb Text C-MAM}} \\ \hline
+        \multicolumn{6}{c}{Linear - (300, 512)}         \\ \hline
+        \multicolumn{6}{c}{BatchNorm1d - (512)}         \\ \hline
+        \multicolumn{6}{c}{Linear - (512, 256)}         \\ \hline
+        \multicolumn{6}{c}{Dropout}                     \\ \hline
+        \multicolumn{6}{c}{Linear - (256, 512)}         \\ \hline
+        \end{tabular}%
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.2\textwidth}
+    \centering
+    \vspace{0pt} % Align tops
+    \begin{tabular}{clllll}
+        \hline
+        \multicolumn{6}{c}{\textbf{MM-IMDb Image C-MAM}} \\ \hline
+        \multicolumn{6}{c}{Linear - (4096, 512)}         \\ \hline
+        \multicolumn{6}{c}{BatchNorm1d - (512)}          \\ \hline
+        \multicolumn{6}{c}{ReLU}                         \\ \hline
+        \multicolumn{6}{c}{Dropout}                      \\ \hline
+        \multicolumn{6}{c}{Linear - (512, 256)}          \\ \hline
+        \multicolumn{6}{c}{BatchNorm1d - (256)}          \\ \hline
+        \multicolumn{6}{c}{ReLU}                         \\ \hline
+        \multicolumn{6}{c}{Dropout}                      \\ \hline
+        \multicolumn{6}{c}{Linear - (256, 512)}          \\ \hline
+        \end{tabular}%
+    \end{minipage}%
+    \hfill
+\end{table}
+

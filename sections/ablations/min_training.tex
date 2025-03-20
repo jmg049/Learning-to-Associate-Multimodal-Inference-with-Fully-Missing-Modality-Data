@@ -1,0 +1,86 @@
+\FloatBarrier
+
+\subsection{Minimum Training Requirements}\label{sec:min_training}
+A key consideration in the post-training C-MAM approach is the requirement to train new C-MAMs on the full dataset. Since each C-MAM is trained independently, this process can be computationally expensive. To assess the minimum training data necessary for effective performance, we conduct experiments using progressively larger balanced subsets (10\%–100\%) of AVMNIST, MM-IMDb, and MOSEI, evaluating C-MAMs on the full test set after training.
+
+\textbf{AVMNIST:} The results in \Cref{fig:avmnist_min_training} indicate that C-MAMs trained with as little as 10\% of the data still achieve strong performance, with differences of approximately 5\% (Audio to Image) and 2\% (Image to Audio) when compared to full dataset training. The validation loss curves demonstrate a common trend across all data percentages, showing that while larger datasets lead to faster and more stable convergence, even small training subsets enable effective learning. This suggests that the \textbf{latent space learnt during training remains robust}, allowing smaller training samples to reconstruct missing modalities effectively. Notably, the Image to Audio C-MAM exhibits greater instability at lower data availability, likely due to \textbf{asymmetry in information redundancy between modalities}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/avmnist_audio_to_image.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/avmnist_image_to_audio.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/avmnist_audio_to_image_val_loss.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/avmnist_image_to_audio_val_loss.pdf}
+    \caption{\textbf{AVMNIST: }\textbf{Top}: C-MAM classification performance versus percentage of training data available. \textbf{Bottom}: Validation loss during C-MAM training performance versus percentage of training data available.}
+    \label{fig:avmnist_min_training}
+\end{figure}
+
+\textbf{MM-IMDb:} \Cref{fig:mmimdb_min_training} presents similar trends but highlights dataset-specific challenges. While performance differences remain small (4\%–10\% for Image to Text, 2\%–5\% for Text to Image), the loss curves reveal that \textbf{low training availability leads to increased instability}, particularly in early training epochs. The \textbf{modality dependence in MM-IMDb is more pronounced}, as text provides stronger supervision for genre classification. However, the Text to Image and Image to Text C-MAMs exhibit similar stability trends, with fluctuations primarily occurring at lower training data availability and reinforcing the idea that \textbf{latent space alignment is more challenging when the source modality carries weaker supervisory signals}. Despite this, test performance remains stable across all training subsets, suggesting that the \textbf{learnt latent spaces generalize well} to unseen data, even when trained with limited samples.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mmimdb_image_to_text.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mmimdb_text_to_image.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mmimdb_image_to_text_val.pdf_loss.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mmimdb_text_to_image_val.pdf_loss.pdf}
+    \caption{\textbf{MM-IMDb: } \textbf{Top:} C-MAM classification performance versus percentage of training data available. \textbf{Bottom:} Validation loss during C-MAM training performance versus percentage of training data available.}
+    \label{fig:mmimdb_min_training}
+\end{figure}
+
+\textbf{MOSEI:} The results in \Cref{fig:mosei_min_training_two,fig:mosei_min_training_three,fig:mosei_min_training_four,fig:mosei_min_training_five,fig:mosei_min_training_six} further support these conclusions. The Audio to Text, Video to Text, and Audio and Video to Text C-MAMs exhibit clear performance gains with increasing training data, aligning with prior observations in \Cref{tab:mosei_results}. However, for cases where text is available, performance remains largely unaffected by training size, reinforcing the \textbf{dominance of text as a supervisory modality} in multimodal tasks. Across all conditions, validation loss curves follow similar patterns, with larger training subsets enabling faster convergence. The slower learning curves for smaller training sizes, despite ultimately reaching comparable performance, highlight the \textbf{efficiency of the learnt latent spaces in adapting to missing modalities with minimal data}.
+
+
+Overall, these findings emphasize the \textbf{robustness of the learnt latent spaces in the C-MAM framework}. Even with limited training data, the representations enable effective reconstruction and generalization. The results further support the conclusion that \textbf{learning a learnt, static latent space post-training offers significant advantages over working directly with the original model and data}, as they remain transferable and stable across different training conditions. Additionally, the interplay between modality dominance and training efficiency suggests that future research could explore \textbf{adaptive training strategies}, selectively allocating training resources based on modality importance to optimise computational efficiency further.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_to_video.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_to_text.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_to_video_loss.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_to_text_loss.pdf}
+
+
+    \caption{\textbf{MOSEI:} \textbf{Top:} Audio C-MAM classification performance versus percentage of training data available. \textbf{Bottom: } Validation loss during C-MAM training performance versus percentage of training data available.}
+    \label{fig:mosei_min_training_two}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_video_to_audio.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_video_to_text.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_video_to_audio_loss.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_video_to_text_loss.pdf}
+    \caption{\textbf{MOSEI:} \textbf{Top:} Video C-MAM classification performance versus percentage of training data available. \textbf{Bottom:} Validation loss during C-MAM training performance versus percentage of training data available.}
+    \label{fig:mosei_min_training_three}
+\end{figure}
+
+\begin{figure}[h!]
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_text_to_audio.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_text_to_video.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_text_to_audio_loss.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_text_to_video_loss.pdf}
+    \caption{\textbf{MOSEI:} \textbf{Top:} Text C-MAM classification performance versus percentage of training data available. \textbf{Bottom:} Validation loss during C-MAM training performance versus percentage of training data available.}
+    \label{fig:mosei_min_training_four}
+\end{figure}
+
+\begin{figure}[h!]
+
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_video_to_text.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_text_to_video.pdf} 
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_video_to_text_loss.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_audio_text_to_video_loss.pdf} 
+    \caption{\textbf{MOSEI:} \textbf{Top:} Audio-Video and Audio-Text C-MAM classification performance versus percentage of training data available. \textbf{Bottom:} Validation loss during C-MAM training performance versus percentage of training data available.}
+    \label{fig:mosei_min_training_five}
+
+\end{figure}
+
+
+\begin{figure}[b!]
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_video_text_to_audio.pdf}
+    \includegraphics[width=0.475\linewidth]{imgs/min_training/mosei_video_text_to_audio_loss.pdf}
+    \caption{\textbf{MOSEI:} \textbf{Top:} Video-Audio and Video-Text C-MAM classification performance versus percentage of training data available. \textbf{Bottom:} Validation loss during C-MAM training performance versus pe                                              rcentage of training data available.}
+    \label{fig:mosei_min_training_six}
+\end{figure}
+
+
+\FloatBarrier

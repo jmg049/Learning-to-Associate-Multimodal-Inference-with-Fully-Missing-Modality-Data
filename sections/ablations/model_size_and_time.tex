@@ -1,0 +1,61 @@
+\FloatBarrier
+
+\subsection{C-MAM Parameter Counts and Storage Requirements}
+\label{sec:parameter_counts}
+This section provides an analysis of the total number of trainable parameters and storage requirements for the C-MAMs used in this work. The parameter count for each model is computed based on Equation~\ref{eq:param_count}, which defines the architecture of the association network in terms of input size ($I$), hidden size ($H$), and output size ($O$), with an optional batch normalization term ($BN$). The equation assumes the architecture of the C-MAMs is the same as those used within the context of this work, a linear network as described in Section \ref{sec:experiments}. Table~\ref{tab:param_counts} presents the total number of parameters for each model along with its corresponding size on disk (in MB). The results demonstrate that C-MAMs are exceptionally lightweight, with the majority of models requiring fewer than 1MB of storage. Despite their small footprint, C-MAMs are able to effectively reconstruct missing modality embeddings while maintaining high performance, as shown in previous sections. These findings reinforce the practical advantages of C-MAMs, particularly in resource-constrained environments where computational efficiency and storage limitations are critical factors. Their compact size allows for efficient deployment, and their modular design enables seamless integration with existing multimodal architectures without introducing excessive overhead.
+
+\begin{equation*}\label{eq:param_count}
+    P = ( \text{I} \times \text{H} ) + \text{H} 
+    + (\text{H} \times \text{O}) + \text{O} 
+    + 2 \times \text{H} \times \text{BN},
+\end{equation*}
+
+ 
+\begin{table}[]
+\centering
+\caption{Total trainable parameter count for C-MAMs. Calculations are based on Equation \ref{eq:param_count}. }
+\label{tab:param_counts}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|cccccc}
+\hline
+\multicolumn{1}{c|}{\textbf{Model}}            & \textbf{Input Size} & \textbf{Hidden Size} & \textbf{Output Size} & \textbf{Batch Norm} & \textbf{Total Parameters} & \textbf{Size (Mb)} \\ \hline
+\textbf{Audioset - A $\mapsto$ V}              & 16                  & 64                   & 256                  & TRUE                & 17664                     & 0.07               \\
+\textbf{Audioset - V $\mapsto$ A}              & 256                 & 64                   & 16                   & TRUE                & 17664                     & 0.07               \\ \hline
+\textbf{AVMNIST - A $\mapsto$ I}               & 128                 & 64                   & 128                  & TRUE                & 16640                     & 0.07               \\
+\textbf{AVMNIST - I $\mapsto$ A}               & 128                 & 128                  & 64                   & TRUE                & 25088                     & 0.1                \\ \hline
+\textbf{Kinetics-Sounds - A $\mapsto$ V}       & 32                  & 64                   & 128                  & TRUE                & 10496                     & 0.04               \\
+\textbf{Kinetics-Sounds - V $\mapsto$ A}       & 128                 & 64                   & 32                   & TRUE                & 10496                     & 0.04               \\ \hline
+\textbf{MM-IMDb - I $\mapsto$ T}               & 512                 & 256                  & 512                  & TRUE                & 263168                    & 1.05               \\
+\textbf{MM-IMDb - I $\mapsto$ T}               & 512                 & 256                  & 512                  & TRUE                & 263168                    & 1.05               \\ \hline
+\textbf{EMT-DLFR MOSI- AV $\mapsto$ T}         & 48                  & 64                   & 768                  & TRUE                & 52480                     & 0.21               \\
+\textbf{EMT-DLFR MOSI- AV $\mapsto$ T}         & 48                  & 64                   & 768                  & TRUE                & 52480                     & 0.21               \\ \hline
+\textbf{UttFusion MOSEI- A $\mapsto$ V}        & 64                  & 32                   & 64                   & TRUE                & 4224                      & 0.02               \\
+\textbf{UttFusion MOSEI- A $\mapsto$ T}        & 64                  & 32                   & 64                   & TRUE                & 4224                      & 0.02               \\
+\textbf{UttFusion MOSEI- V $\mapsto$ A}        & 64                  & 32                   & 64                   & TRUE                & 4224                      & 0.02               \\
+\textbf{UttFusion MOSEI- V $\mapsto$ T}        & 64                  & 32                   & 64                   & TRUE                & 4224                      & 0.02               \\
+\textbf{UttFusion MOSEI- T $\mapsto$ A}        & 64                  & 32                   & 64                   & TRUE                & 4224                      & 0.02               \\
+\textbf{UttFusion MOSEI- T $\mapsto$ V}        & 64                  & 32                   & 64                   & TRUE                & 4224                      & 0.02               \\
+\textbf{UttFusion MOSEI- AV $\mapsto$ T}       & 128                 & 32                   & 64                   & TRUE                & 6272                      & 0.03               \\
+\textbf{UttFusion MOSEI- AT $\mapsto$ V}       & 128                 & 32                   & 64                   & TRUE                & 6272                      & 0.03               \\
+\textbf{UttFusion MOSEI - VT $\mapsto$ A}      & 128                 & 32                   & 64                   & TRUE                & 6272                      & 0.03               \\
+\textbf{UttFusion IEMOCAP- A $\mapsto$ V}      & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion IEMOCAP- A $\mapsto$ T}      & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion IEMOCAP- V $\mapsto$ A}      & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion IEMOCAP- V $\mapsto$ T}      & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion IEMOCAP- T $\mapsto$ A}      & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion IEMOCAP- T $\mapsto$ V}      & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion IEMOCAP- AV $\mapsto$ T}     & 256                 & 512                  & 256                  & TRUE                & 264192                    & 1.06               \\
+\textbf{UttFusion IEMOCAP- AT $\mapsto$ V}     & 256                 & 512                  & 256                  & TRUE                & 264192                    & 1.06               \\
+\textbf{UttFusion IEMOCAP - VT $\mapsto$ A}    & 256                 & 512                  & 256                  & TRUE                & 264192                    & 1.06               \\
+\textbf{UttFusion MSP-IMPROV- A $\mapsto$ V}   & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion MSP-IMPROV- A $\mapsto$ T}   & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion MSP-IMPROV- V $\mapsto$ A}   & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion MSP-IMPROV- V $\mapsto$ T}   & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion MSP-IMPROV- T $\mapsto$ A}   & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion MSP-IMPROV- A $\mapsto$ T}   & 128                 & 256                  & 128                  & TRUE                & 66560                     & 0.27               \\
+\textbf{UttFusion MSP-IMPROV- AV $\mapsto$ T}  & 256                 & 512                  & 256                  & TRUE                & 264192                    & 1.06               \\
+\textbf{UttFusion MSP-IMPROV- AT $\mapsto$ V}  & 256                 & 512                  & 256                  & TRUE                & 264192                    & 1.06               \\
+\textbf{UttFusion MSP-IMPROV - VT $\mapsto$ A} & 256                 & 512                  & 256                  & TRUE                & 264192                    & 1.06               \\ \hline
+\end{tabular}%
+}
+\end{table}

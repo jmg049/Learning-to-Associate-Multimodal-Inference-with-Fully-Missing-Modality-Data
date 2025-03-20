@@ -1,0 +1,27 @@
+\begin{table}[h!]
+\footnotesize
+\centering
+\caption{Performance metrics for the models trained on the Kinetics-Sounds dataset. w/o indicates that the modality was 100\% missing during inference.}
+\label{tab:ks_results}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{l|cccccccccc}
+\hline
+\textbf{Kinetics-Sounds} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 1\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 2\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 5\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Top 7\\ Accuracy\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Precision - \\ Micro\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}Recall - \\ Micro\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Weighted\end{tabular}} &
+  \textbf{\begin{tabular}[c]{@{}c@{}}F1 -\\ Micro\end{tabular}} \\ \hline
+\textbf{MM}                                                           & 0.7798 & 0.8634 & 0.9400 & 0.9578 & 0.7940 & 0.7800 & 0.7800 & 0.7800 & 0.7824 & 0.7800 \\ \hline
+\textbf{\begin{tabular}[l]{@{}l@{}}MM w/o\\ Audio\end{tabular}}       & 0.7733 & \textbf{0.8536} & 0.9335 & \textbf{0.9536} & 0.7893 & 0.7733 & 0.7733 & 0.7733 & 0.7762 & \textbf{0.7733} \\
+\textbf{\begin{tabular}[l]{@{}l@{}}MM w/ \\ C-MAM Audio\end{tabular}} & \textbf{0.7747} & 0.8536 & \textbf{0.9341} & \textbf{0.9546} & \textbf{0.7903} & \textbf{0.7748} & \textbf{0.7748} & \textbf{0.7748} & \textbf{0.7778} & 0.7696 \\ \hline
+\textbf{\begin{tabular}[l]{@{}l@{}}MM w/o\\ Video\end{tabular}}       & 0.1116 & 0.1652 & 0.3327 & 0.4333 & 0.0450 & 0.1116 & 0.1116 & 0.1151 & 0.0548 & 0.1116 \\
+\textbf{\begin{tabular}[l]{@{}l@{}}MM w/\\ C-MAM Video\end{tabular}}  & \textbf{0.2863} & \textbf{0.3975} & \textbf{0.5742} & \textbf{0.6529} & \textbf{0.2816} & \textbf{0.2863} & \textbf{0.2863} & \textbf{0.2863} & \textbf{0.2555} & \textbf{0.2863} \\ \hline
+\end{tabular}%
+}
+\end{table}
